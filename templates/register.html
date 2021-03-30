@@ -1,0 +1,17 @@
+{% block body %}
+
+<section id='register'>
+    <form action='/register_' method='POST'>
+        <label for='username'>Username: </label><input id=username name='username'></input><br/>
+        <label for='password'>Password: </label><input id=password name='password'></input><br/>
+        <label for='username'>Name: </label><input id=name name='name'></input><br/>
+        <label for='password'>Email: </label><input id=email name='email' type='email'></input><br/>
+        <label for='username'>Mobile: </label><input id=mobile name='mobile'></input><br/>
+        <label for='password'>Date of birth: </label><input id=date name='date' type='date'></input><br/>
+        <label for='username'>Pan no: </label><input id=panno name='panno'></input><br/>
+        <label for='password'>Aadhar no: </label><input id=aadhar name='aadhar'></input><br/>
+        <button type=submit>Submit</button>
+    </form>
+</section>
+
+{% endblock %}
