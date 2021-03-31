@@ -1,7 +1,8 @@
+{% include "header.html" %}
 {% block body %}
 
 <section id='login'>
-    <form action='/login_' method='POST'>
+    <form action='/login' method='POST'>
         <label for='username'>Username: </label><input id=username name='username'></input><br/>
         <label for='password'>Password: </label><input id=password name='password' type='password'></input>
         <button type=submit>Submit</button>

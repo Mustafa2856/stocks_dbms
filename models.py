@@ -47,7 +47,7 @@ class Bank_Details(db.Model):
 
     account_no = db.Column(db.BigInteger,primary_key=True,autoincrement=False)
     User_id = db.Column(db.Integer,db.ForeignKey('User.id',ondelete='CASCADE'))
-    user = db.relationship('User',backref=db.backref('User',passive_deletes=True))
+    user = db.relationship('User',backref=db.backref('User_bank',passive_deletes=True))
     bank_name = db.Column(db.String(120))
     bank_branch = db.Column(db.String(120))
     bank_IFSC = db.Column(db.String(20))
@@ -67,14 +67,17 @@ class demat(db.Model):
     __tablename__ = 'demat'
 
     account_no = db.Column(db.BigInteger,primary_key=True,autoincrement=False)
+    User_id = db.Column(db.Integer,db.ForeignKey('User.id',ondelete='CASCADE'))
+    user = db.relationship('User',backref=db.backref('User_demat',passive_deletes=True))
     Broker_id = db.Column(db.Integer)
     Broker_name = db.Column(db.String(200))
     Funds_Avail = db.Column(db.Numeric)
     Funds_Blocked = db.Column(db.Numeric)
     Funds_Invested = db.Column(db.Numeric)
 
-    def __init__(self,account_no,Broker_id,Broker_name):
+    def __init__(self,account_no,User_id,Broker_id,Broker_name):
         self.account_no = account_no
+        self.User_id = User_id
         self.Broker_id = Broker_id
         self.Broker_name = Broker_name
         self.Funds_Avail = 0
