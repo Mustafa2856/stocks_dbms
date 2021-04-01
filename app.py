@@ -21,8 +21,8 @@ from models import User
 
 @app.route('/',methods=['POST','GET'])
 def home():
-   clear_flashed_messages()
-   return render_template('/index.html')
+   user = session.get('current_user',None)
+   return render_template('/index.html',user=user)
 
 @app.route('/login',methods=['POST','GET'])
 def login():
@@ -35,7 +35,8 @@ def login():
          flash('Incorrect password or username')
       else:
          return redirect('/user_home')
-   return render_template('/login.html')
+   user = session.get('current_user',None)
+   return render_template('/login.html',user=user)
 
 @app.route('/register',methods=['POST','GET'])
 def register():
@@ -49,7 +50,8 @@ def register():
          flash("Improper details")
          return render_template('/register.html')
       return redirect('/user_home')
-   return render_template('/register.html')
+   user = session.get('current_user',None)
+   return render_template('/register.html',user=user)
 
 @app.route('/user_home',methods=['POST','GET'])
 def user_home():
@@ -59,3 +61,20 @@ def user_home():
       return redirect('/login')
    return render_template('/user_home.html',user=user)
 
+@app.route('/personal_details',methods=['POST','GET'])
+def personal_details():
+   user = session.get('current_user',None)
+   if user == None:
+      flash('Incorrect password or username')
+      return redirect('/login')
+   return render_template('/personal_details.html',user=user)
+
+@app.route('/company_details',methods=['POST','GET'])
+def company_details():
+   user = session.get('current_user',None)
+   return render_template('/company_details.html',user=user)
+
+@app.route('/logout',methods=['POST','GET'])
+def logout():
+   session['current_user']=None
+   return redirect('/')

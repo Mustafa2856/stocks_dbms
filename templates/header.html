@@ -1,5 +1,17 @@
 {% with messages = get_flashed_messages() %}
   {% if messages %}
+  <style>
+    .flashes{
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      background-color: black;
+      color: white;
+      display: block;
+      list-style-type: none;
+      padding: 15;
+    }
+  </style>
     <ul class=flashes>
     {% for message in messages %}
       <li>{{ message }}</li>
@@ -7,21 +19,3 @@
     </ul>
   {% endif %}
 {% endwith %}
-{% block body %}
-<head>
-    <title> Stocks Stonks! ?? </title>
-</head>
-<body>
-    <header>
-        {% block header %}
-            Header include here
-        {% endblock %}
-    </header>
-    {% block navigation %}
-        <div id=nav>
-            Navigation
-        </div>
-    {% endblock %}
-</body>
-
-{% endblock %}
