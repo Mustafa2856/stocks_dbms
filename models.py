@@ -156,7 +156,7 @@ class transactions(db.Model):
     company_id = db.Column(db.String(10),db.ForeignKey('company.id',ondelete='CASCADE'))
     company = db.relationship('company',backref=db.backref('trans_company',passive_deletes=True))
     demat_ac = db.Column(db.BigInteger,db.ForeignKey('demat.account_no',ondelete='CASCADE'))
-    demat = db.relationship('demat',backref=db.backref('portfolio_demat',passive_deletes=True))
+    demat = db.relationship('demat',backref=db.backref('trans_demat',passive_deletes=True))
     buy = db.Column(db.Boolean)
     price = db.Column(db.Numeric)
     quantity = db.Column(db.Integer)
