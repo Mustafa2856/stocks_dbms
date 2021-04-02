@@ -9,7 +9,7 @@ import yfinance as yf
 import plotly.graph_objs as go
 
 #Interval required 1 minute
-data = yf.download(tickers='ATULAUTO.NS', period='1d', interval='1m')
+data = yf.download(tickers='AAPL', period='1d', interval='1m')
 print(data)
 
 #declare figure
