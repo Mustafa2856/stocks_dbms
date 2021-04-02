@@ -1,7 +1,7 @@
-{% include "header.html" %}
-{% block body %}
 
-<script>
+
+/* javaScript Validation for SignUp / Register Page  */
+
     function validate(){ 
     var username = document.getElementById("username").value;
     var password = document.getElementById('password').value;
@@ -58,51 +58,6 @@
         document.getElementById('aadhar').focus();
         return false;
     }
-    error_msg.style.padding="0px";
    return true;
 }
-</script>
-<section id='register'>
-    
-    <form  action='/register' method='POST' onsubmit="return validate()" >
-        <div id="error_msg" style="background-color: rgb(248, 43, 53);max-width: 300px;">
-            <p class="error"> </p>
-         </div>
-        <label for='username'>Username: </label>
-        <input id="username" name="username" type="text" placeholder="Username">
-        
-        <br/>
 
-        <label for='password'>Password: </label>
-        <input id="password" name='password' placeholder="Password">
-        <br/>
-
-        <label for='username'>Name: </label>
-        <input id=name name='name'placeholder="Name">
-        <br/>
-
-        <label for='password'>Email: </label>
-        <input id=email name='email' type='email' placeholder="abc@xyz.com">
-        <br/>
-
-        <label for='username'>Mobile: </label>
-        <input id=mobile name='mobile'></input>
-        <br/>
-
-        <label for='password'>Date of birth: </label>
-        <input id=dob name='date' type='date'></input>
-        <br/>
-
-        <label for='username'>Pan no: </label>
-        <input id=panno name='panno' placeholder="ABCDE1234Z"></input>
-        <br/>
-
-        <label for='password'>Aadhar no: </label>
-        <input id=aadhar name='aadhar' placeholder="1234-5678-9012"></input>
-        <br/>
-
-        <input type="submit" name="send">
-    </form>
-</section>
-
-{% endblock %}
