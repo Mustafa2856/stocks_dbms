@@ -1,0 +1,62 @@
+{% include "header.html" %}
+{% block body %}
+<style>
+    *{  font-size: large;
+      
+    }
+   .p{ 
+       display:inline-flex;
+       margin: 5px;
+   }
+   body{
+      margin: 15px;
+      padding: 15px;
+      align-items: center;
+   }
+  
+</style>
+    <body>
+    <h1>Portfolio</h1>
+    <div>
+        DEMAT A/C No:<br>
+        Total Investment:<br>
+        Current Investment:<br>
+        Overall Gain/Loss: <br>
+    </div>
+    <hr>
+        <div id="portfolio" >
+            <div class="p">
+                <div id="company_name">
+                    <b> Reliance Industries Limited</b>
+                </div>
+                <div id="current_investment">
+                    &nbsp;   &nbsp; ₹38,000.00
+                </div>
+            </div>
+            <br>
+            <div class="p">
+                <div id="current_price">
+                    Current Price : ₹2021
+                </div>
+                <div id="buy_price">
+                    &nbsp;   &nbsp;Buy price : ₹2059
+                </div>
+            </div>
+        <br>
+            <div class="p">
+                <div id="Quantity">
+                    Quantity : 19
+                </div>
+                <div id="investment">
+                    &nbsp;   &nbsp;Investment : ₹39121
+                </div>
+            </div>
+            <br>
+            <div id="profit_loss">
+                <!-- ( buy_price < current_price ? Profit : Loss ) -->Loss : ₹705
+            </div>
+            <hr>
+        </div>
+</body>
+
+{% endblock %}

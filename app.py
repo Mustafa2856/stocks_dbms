@@ -78,3 +78,16 @@ def company_details():
 def logout():
    session['current_user']=None
    return redirect('/')
+
+
+
+@app.route('/portfolio',methods=['POST','GET'])
+def porfolio():
+   user = session.get('current_user',None)
+   return render_template('/portfolio.html',user=user)
+
+
+@app.route('/trade',methods=['POST','GET'])
+def trade():
+   user = session.get('current_user',None)
+   return render_template('/trade_page.html',user=user)

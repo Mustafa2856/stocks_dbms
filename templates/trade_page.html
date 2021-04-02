@@ -1,0 +1,54 @@
+{% include "header.html" %}
+{% block body %}
+
+<script>
+    function price(){
+
+   
+        var current_price=20;
+        var quantity=document.getElementById("quantity").value;
+        
+        
+        var cash = document.getElementById("cash");
+        
+        cash.innerHTML= (quantity*current_price);
+       
+ }
+</script>
+<div id="trade">
+    <div>
+        Order Type: Market
+    </div>
+    <div>
+        Comapany Name: Reliance Industries Limited 
+    </div>
+    <div>
+        Market Price: $20
+    </div>
+    <div>
+        <!-- Buy / Sell -->Buy Quantity: &nbsp;
+        <input 
+            id="quantity" 
+            placeholder="Number Of Stocks "
+            type="number"
+            onchange="return price()"
+        >
+    </div>
+    <div>
+        Available Funds: 
+    </div>
+    <div>
+        Buying Capacity:<!-- (int) Available Funds / current price -->
+        <!-- / Shares Available (from portfolio) -->
+    </div>
+    <div>
+        Total Amount Debit:<!-- Total Proceeds --> &nbsp;&nbsp;<label id="cash"> 0 </label>
+    </div>
+    <div>
+        <button >Buy<!-- Sell --></button>
+        <button >Cancel</button>
+    </div>
+    
+</div>
+
+{% endblock %}
