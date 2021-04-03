@@ -1,7 +1,104 @@
 {% include "header.html" %}
 {% block body %}
+<style>
+    body {
+      margin: 0;
+      background-color: rgb(0, 20, 110);
+      color:rgb(255, 255, 255);
+      
+    }
+    *{
+        font-size: large;
+    }
+    .topnav {
+      overflow: hidden;
+      background-color: rgb(10, 28, 46);
+    }
+    
+    .topnav a {
+      float: left;
+      display: block;
+      color: #f2f2f2;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      font-size: 17px;
+    }
+    
+    .topnav a:hover {
+      background-color: #ddd;
+      color: black;
+    }
+    
+    .topnav a.active {
+      background-color: #f11313;
+      color: white;
+    }
+    
+    .topnav .icon {
+      display: none;
+    }
+    
+    @media screen and (max-width: 600px) {
+      .topnav a:not(:first-child) {display: none;}
+      .topnav a.icon {
+        float: right;
+        display: block;
+      }
+    }
+    
+    @media screen and (max-width: 600px) {
+      .topnav.responsive {position: relative;}
+      .topnav.responsive .icon {
+        position: absolute;
+        right: 0;
+        top: 0;
+      }
+      .topnav.responsive a {
+        float: none;
+        display: block;
+        text-align: left;
+      }
+    }
+    .trade{
+        text-align: center;
+        display: block;
+        padding: 10px 10%;
+        border: 3px solid rgb(24, 228, 218);
+        margin-left: 15%;margin-right: 15%;
+    }
+table{
+    width:100%;
+    
+}
 
+
+button {
+  background-color: #0b2cec;
+  color: rgb(255, 255, 255);
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 60%;
+}
+
+button:hover {
+  opacity: 0.7;
+}
+
+.cancel  {
+  background-color: #ec0b29;
+  color: rgb(255, 255, 255);
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+}
+
+</style>
 <script>
+   
     function price(){
 
    
@@ -13,42 +110,93 @@
         
         cash.innerHTML= (quantity*current_price);
        
- }
+    }
+
+    function buy_sell(){
+       var bs=document.getElementById("bs").innerHTML;
+       
+       if(bs==="Buy"){
+           
+           document.getElementById("bs").innerHTML="Sell"
+           document.getElementById("bs_quan").innerHTML="Selling Quantity"
+           document.getElementById("bs_capacity").innerHTML="Shares Available"
+           document.getElementById("total").innerHTML="Total Proceeds:"
+           document.getElementById("btn").innerHTML="Sell"
+       }else if(bs=="Sell"){
+       
+            document.getElementById("bs").innerHTML="Buy";
+            document.getElementById("bs_quan").innerHTML="Buying Quantity"
+            document.getElementById("bs_capacity").innerHTML="Buying Capacity"
+            document.getElementById("total").innerHTML="Total Amount Debit:"
+            document.getElementById("btn").innerHTML="Buy"
+       }
+     
+    }
 </script>
-<div id="trade">
-    <div>
-        Order Type: Market
+<button id="bs" onClick="return buy_sell()">Buy</button>
+    <div class="trade">
+        <h1>Place Order</h1>
+        <table>
+            <tr>
+                <td>Order Type:</td>
+                <td>Market</td>
+            </tr>
+            <tr>
+                <td>Comapany Name:</td>
+                <td>Reliance Industries Limited</td>
+                  
+            </tr>
+            <tr>
+                <td>Market Price:</td>
+                <td>$20</td>
+                 
+            </tr>
+            <tr>
+                <!-- Buy / Sell --> 
+                <td id="bs_quan">
+                        Buy Quantity:
+                </td>  
+                <td>
+                    <input 
+                        id="quantity" 
+                        placeholder="Number Of Stocks "
+                        type="number"
+                        onchange="return price()"
+                    >
+                </td>
+               
+            </tr>
+            <tr>
+                <td>Available Funds:</td>
+                <td> </td>
+                 
+            </tr>
+            <tr>
+                <td id="bs_capacity">
+                    Buying Capacity:
+                </td><!-- (int) Available Funds / current price -->
+                <!-- / Shares Available (from portfolio) -->
+                <td>
+
+                </td>
+            </tr>
+            <tr>
+                 <td id="total">Total Amount Debit :</td><!-- Total Proceeds --> 
+                 <td id="cash"> 0 </td>
+            </tr>
+            <tr>
+                
+                <td>
+                    <button class="cancel">Cancel</button>
+                </td>
+                <td>
+                    <button id="btn">
+                        Buy
+                   <!-- Sell -->
+                    </button>
+                </td>
+            </tr>
+        </table>
     </div>
-    <div>
-        Comapany Name: Reliance Industries Limited 
-    </div>
-    <div>
-        Market Price: $20
-    </div>
-    <div>
-        <!-- Buy / Sell -->Buy Quantity: &nbsp;
-        <input 
-            id="quantity" 
-            placeholder="Number Of Stocks "
-            type="number"
-            onchange="return price()"
-        >
-    </div>
-    <div>
-        Available Funds: 
-    </div>
-    <div>
-        Buying Capacity:<!-- (int) Available Funds / current price -->
-        <!-- / Shares Available (from portfolio) -->
-    </div>
-    <div>
-        Total Amount Debit:<!-- Total Proceeds --> &nbsp;&nbsp;<label id="cash"> 0 </label>
-    </div>
-    <div>
-        <button >Buy<!-- Sell --></button>
-        <button >Cancel</button>
-    </div>
-    
-</div>
 
 {% endblock %}

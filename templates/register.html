@@ -91,6 +91,9 @@ button:hover {
   border: none;
   cursor: pointer;
 }
+#error_msg{
+  margin-left: 20em;
+}
 </style>
 <script>
     function validate(){ 
@@ -102,6 +105,10 @@ button:hover {
     var dob = document.getElementById('dob').value;
     var panno = document.getElementById('panno').value;
     var aadhar = document.getElementById('aadhar').value;
+    var bank_ac = document.getElementById("bank_ac").value;
+    var ifsc = document.getElementById("bank_ifsc").value;
+    var bank_name = document.getElementById("bank_name").value;
+    var branch = document.getElementById("bank_branch").value;
     var error_msg = document.getElementById("error_msg");
     error_msg.style.padding="10px";
     var text;
@@ -149,6 +156,34 @@ button:hover {
         document.getElementById('aadhar').focus();
         return false;
     }
+
+    if(bank_ac.length<9 || isNaN(bank_ac)){
+        text = "Please Enter  Valid Bank A/C Number";
+        error_msg.innerHTML = text ;
+        document.getElementById("bank_ac").focus();
+        return false;
+    }
+    if(bank_name.length<5 ){
+        text = "Please Enter Full Name of Your Bank";
+        error_msg.innerHTML = text ;
+        document.getElementById("bank_name").focus();
+        return false;
+    }
+    if(branch<3 ){
+        text = "Please Enter  Valid Branch Name";
+        error_msg.innerHTML = text ;
+        document.getElementById("bank_branch").focus();
+        return false;
+    }
+    if(ifsc.length!=11 || !/^[A-Za-z]{4}[0-9]{7}$/.test(ifsc)){
+        text = "Please Enter  Valid IFSC Number";
+        error_msg.innerHTML = text ;
+        document.getElementById("bank_ifsc").focus();
+        return false;
+    }
+
+    
+    
     error_msg.style.padding="0px";
    return true;
 }
@@ -200,7 +235,7 @@ function myFunction() {
         </td></tr><tr><th>
 
         <label for='password'>Password: </label></th><td>
-        <input id="password" name='password'  type="text" placeholder="Password">
+        <input id="password" name='password'  type="password" placeholder="Password">
         </td></tr><tr><th>
 
         <label for='name'>Name: </label></th><td>
