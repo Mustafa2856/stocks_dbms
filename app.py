@@ -17,7 +17,7 @@ app.config['SESSION_PERMANENT'] = False
 app.config['SECRET_KEY'] = "secret key"
 Session(app)
 
-from models import User
+from models import User, Bank_Details, demat, company, shares, portfolio, transactions
 
 @app.route('/',methods=['POST','GET'])
 def home():
@@ -44,9 +44,12 @@ def register():
       frm = request.form
       try:
          db.session.add(User(frm['username'],frm['password'],frm['name'],frm['email'],frm['mobile'],frm['date'],frm['panno'],frm['aadhar']))
+         db.session.add(Bank_Details(frm['bank_ac'],frm['username'],frm['bank_name'],frm['bank_branch'],frm['bank_ifsc']))
+         db.session.add(demat(frm['username']))
          db.session.commit()
          session['current_user'] = User.query.filter_by(username=frm['username']).first()
-      except(Exception):
+      except Exception as exp:
+         print(exp)
          flash("Improper details")
          return render_template('/register.html')
       return redirect('/user_home')

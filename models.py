@@ -73,10 +73,9 @@ class demat(db.Model):
     Funds_Blocked = db.Column(db.Numeric)
     Funds_Invested = db.Column(db.Numeric)
 
-    def __init__(self,account_no,User_id):
-        self.account_no = account_no
+    def __init__(self,User_id):
         self.User_id = User_id
-        self.Funds_Avail = 0
+        self.Funds_Avail = 50000
         self.Funds_Blocked = 0
         self.Funds_Invested = 0
     
