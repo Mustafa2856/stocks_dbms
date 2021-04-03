@@ -131,10 +131,14 @@ function myFunction() {
 
 <section class='login'>
     <form action='/login' method='POST'>
-        <label for='username'><b>Username: </b></label><input id=username name='username' type='text' placeholder="Enter Username"></input><br/>
-        <label for='password'><b>Password: </b></label><input id=password name='password' type='password' placeholder="Enter password"></input>
-        <button type=submit>Login</button><br/><br/>
-        Not a user? <a href="/register">Register</a><br/><br/>
+      <table style="width: 100%;"><tr><th>
+        <label for='username'>Username</label></th><td>
+        <input id=username name='username' type='text' placeholder="Enter Username"></input></td></tr><tr><th>
+        <label for='password'>Password:</label></th><td>
+        <input id=password name='password' type='password' placeholder="Enter password"></input></td></tr><tr><th colspan="2">
+        <button type=submit>Login</button></th></tr><tr><th colspan="2"><br/>
+        Not a user? <a href="/register">Register</a><br/><br/></th></tr>
+      </table>
     </form>
 </section>
 
