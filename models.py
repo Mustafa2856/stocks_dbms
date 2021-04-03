@@ -82,6 +82,10 @@ class demat(db.Model):
     def __repr__(self):
         return '<demat_ac %r>' % self.account_no
 
+    @classmethod
+    def get_ac(cls,User_id):
+        dmt = cls.query.filter_by(User_id=User_id).first()
+        return dmt
 
 class company(db.Model):
     __tablename__ = 'company'
@@ -172,3 +176,8 @@ class transactions(db.Model):
 
     def __repr__(self):
         return '<trans %r>' % self.id
+
+    @classmethod
+    def get_trs(cls,account_no):
+        dmt = cls.query.filter_by(demat_ac=account_no).all()
+        return dmt

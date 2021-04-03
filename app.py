@@ -34,6 +34,13 @@ def login():
       if user == None:
          flash('Incorrect password or username')
       else:
+         try:
+            session['current_demat'] = demat.get_ac(uname)
+            session['current_trans'] = transactions.get_trs(session['current_demat'].account_no)
+         except Exception as exp:
+            print(exp)
+            flash("Some error occured with your account")
+            return render_template('/login.html',user=user)
          return redirect('/user_home')
    user = session.get('current_user',None)
    return render_template('/login.html',user=user)
@@ -48,6 +55,8 @@ def register():
          db.session.add(demat(frm['username']))
          db.session.commit()
          session['current_user'] = User.query.filter_by(username=frm['username']).first()
+         session['current_demat'] = demat.query.filter_by(User_id=frm['username']).first()
+         session['current_trans'] = transactions.query.filter_by(demat_ac=session.get('current_demat',None))
       except Exception as exp:
          print(exp)
          flash("Improper details")
@@ -59,16 +68,18 @@ def register():
 @app.route('/user_home',methods=['POST','GET'])
 def user_home():
    user = session.get('current_user',None)
+   dmt = session.get('current_demat',None)
+   trans = session.get('current_trans',None)
    if user == None:
-      flash('Incorrect password or username')
+      flash('Login to Access Account Details')
       return redirect('/login')
-   return render_template('/user_home.html',user=user)
+   return render_template('/user_home.html',user=user,dmt=dmt,trans=trans)
 
 @app.route('/personal_details',methods=['POST','GET'])
 def personal_details():
    user = session.get('current_user',None)
    if user == None:
-      flash('Incorrect password or username')
+      flash('Login to Access Personal Details Page')
       return redirect('/login')
    return render_template('/personal_details.html',user=user)
 
@@ -80,6 +91,8 @@ def company_details():
 @app.route('/logout',methods=['POST','GET'])
 def logout():
    session['current_user']=None
+   session['current_demat']=None
+   session['current_trans']=None
    return redirect('/')
 
 
@@ -87,10 +100,16 @@ def logout():
 @app.route('/portfolio',methods=['POST','GET'])
 def porfolio():
    user = session.get('current_user',None)
+   if user == None:
+      flash('Login to Accesss Potfolio')
+      return redirect('/login')
    return render_template('/portfolio.html',user=user)
 
 
 @app.route('/trade',methods=['POST','GET'])
 def trade():
    user = session.get('current_user',None)
+   if user == None:
+      flash('Login to Access Trade Page')
+      return redirect('/login')
    return render_template('/trade_page.html',user=user)

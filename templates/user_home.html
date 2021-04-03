@@ -85,7 +85,59 @@
     </script>
 <section id=Main>
    <div id=head><h2>Account Summary</h2></div>
-   
+   <table>
+     <tr>
+       <td>Username: </td>
+       <td>{{user.username}}</td>
+     </tr>
+     <tr>
+      <td>Name: </td>
+      <td>{{user.name}}</td>
+    </tr>
+    <tr>
+      <td>Demat A/c No: </td>
+      <td>{{dmt.account_no}}</td>
+    </tr>
+    <tr>
+      <td>Funds Available (Cash): </td>
+      <td>{{dmt.Funds_Avail}}</td>
+    </tr>
+    <tr>
+      <td>Funds Invested (Current Stocks Value): </td>
+      <td>{{dmt.Funds_Invested}}</td>
+    </tr>
+    <tr>
+      <td>Total Funds: </td>
+      <td>{{dmt.Funds_Avail + dmt.Funds_Invested + dmt.Funds_Blocked}}</td>
+    </tr>
+    <tr>
+      <td>Total Transactions: </td>
+      <td>{{trans|length}}</td>
+    </tr>
+   </table>
+   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+   <script type="text/javascript">
+   google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var arr = [['Funds','Type'],
+                    ['Cash',{{dmt.Funds_Avail}}],
+                    ['Invested',{{dmt.Funds_Invested}}],
+                    ['Blocked',{{dmt.Funds_Blocked}}]
+                  ];
+        var data  = google.visualization.arrayToDataTable(arr);
+        var options = {
+          title: 'Funds'
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+        chart.draw(data, options);
+      }
+    </script>
+    <br/><br/><br/>
+    <div id="piechart" style="width: 60%; height: 40%; margin-left:20%;margin-right:20%;"></div>
 </section>
 </body>
 {% endblock %}
