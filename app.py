@@ -17,8 +17,16 @@ app.config['SESSION_PERMANENT'] = False
 app.config['SECRET_KEY'] = "secret key"
 Session(app)
 
-from models import User, Bank_Details, demat, company, shares, portfolio, transactions
 
+from models import User, Bank_Details, demat, company, shares, portfolio, transactions
+comp = company.query.all()
+shars = shares.query.all()
+cmp = {}
+shrs = {}
+for i in comp:
+   cmp[i.id] = i
+for i in shars:
+   shrs[i.company_id] = i
 @app.route('/',methods=['POST','GET'])
 def home():
    user = session.get('current_user',None)
@@ -100,10 +108,13 @@ def logout():
 @app.route('/portfolio',methods=['POST','GET'])
 def porfolio():
    user = session.get('current_user',None)
+   dmt = session.get('current_demat',None)
+   trans = session.get('current_trans',None)
+   pft = portfolio.get_shares(dmt.account_no)
    if user == None:
       flash('Login to Accesss Potfolio')
       return redirect('/login')
-   return render_template('/portfolio.html',user=user)
+   return render_template('/portfolio.html',user=user,dmt=dmt,trans=trans,pft=pft,cmp=cmp,shrs=shrs)
 
 
 @app.route('/trade',methods=['POST','GET'])

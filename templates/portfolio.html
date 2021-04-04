@@ -1,17 +1,14 @@
 {% include "header.html" %}
 {% block body %}
 <style>
-    *{  font-size: large;
-      
-    }
+    
    .p{ 
        display:inline-flex;
        margin: 5px;
    }
    body{
-      margin: 15px;
-      padding: 15px;
       align-items: center;
+      margin:0;
       background-color: rgb(0, 20, 110);
       color:rgb(255, 255, 255)
     }
@@ -70,48 +67,92 @@
 
 
 </style>
-    <body>
+<body>
+  {% if user %}
+  <div class="topnav" id="myTopnav">
+    <a href="/">Home</a>
+    <a href="/login">Login</a>
+    <a href="/trade">Trade</a>
+    <a href="/portfolio" class="active">Portfolio</a>
+    <a href="/transactions">Transactions</a>
+    <a href="/company_details">Company Details</a>
+    <a href="/user_home">Account Summary</a>
+    <a href="/personal_details">Personal Details</a>
+    <a href="/logout">Logout</a>
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+      <i class="">...</i>
+    </a>
+  </div>
+  {% else %}
+  <div class="topnav" id="myTopnav">
+    <a href="/">Home</a>
+    <a href="/login" class="active">Login</a>
+    <a href="/company_details">Company Details</a>
+    <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+      <i class="">...</i>
+    </a>
+  </div>
+  {% endif %}
+  <script>
+  function myFunction() {
+    var x = document.getElementById("myTopnav");
+    if (x.className === "topnav") {
+      x.className += " responsive";
+    } else {
+      x.className = "topnav";
+    }
+  }
+  </script>
+  
     <h1>Portfolio</h1>
     <div>
-        DEMAT A/C No:<br>
-        Total Investment:<br>
+        DEMAT A/C No: {{dmt.account_no}}<br>
+        Total Investment: {{dmt.Funds_Invested}}<br>
         Current Investment:<br>
         Overall Gain/Loss: <br>
     </div>
     <hr>
+        {% for port in pft %}
         <div id="portfolio" >
             <div class="p">
                 <div id="company_name">
-                    <b> Reliance Industries Limited</b>
+                    <b> {{cmp[port.company_id].name}}</b>
                 </div>
                 <div id="current_investment">
-                    &nbsp;   &nbsp; ₹38,000.00
+                    &nbsp;   &nbsp; ${{shrs[port.company_id].open_price * port.quantity}}
                 </div>
             </div>
             <br>
             <div class="p">
                 <div id="current_price">
-                    Current Price : ₹2021
+                    Current Price : ${{shrs[port.company_id].open_price}}
                 </div>
                 <div id="buy_price">
-                    &nbsp;   &nbsp;Buy price : ₹2059
+                    &nbsp;   &nbsp;Buy price : ${{port.bid_price}}
                 </div>
             </div>
         <br>
             <div class="p">
                 <div id="Quantity">
-                    Quantity : 19
+                    Quantity : {{port.quantity}}
                 </div>
                 <div id="investment">
-                    &nbsp;   &nbsp;Investment : ₹39121
+                    &nbsp;   &nbsp;Investment : ${{port.bid_price * port.quantity}}
                 </div>
             </div>
             <br>
             <div id="profit_loss">
-                <!-- ( buy_price < current_price ? Profit : Loss ) -->Loss : ₹705
+                <!-- ( buy_price < current_price ? Profit : Loss ) -->
+                {% if shrs[port.company_id].open_price * port.quantity < port.bid_price * port.quantity %}
+                Loss : 
+                {% else %}
+                Profit :
+                {% endif %}
+                ${{(shrs[port.company_id].open_price * port.quantity - port.bid_price * port.quantity)|abs}}
             </div>
             <hr>
         </div>
+        {% endfor %}
 </body>
 
 {% endblock %}

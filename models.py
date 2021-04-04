@@ -131,7 +131,7 @@ class shares(db.Model):
         self.day_high = day_high
     
     def __repr__(self):
-        return '<shares %r %r>' % self.company_id , self.date
+        return '<shares %r>' % self.company_id
 
 
 class portfolio(db.Model):
@@ -151,6 +151,11 @@ class portfolio(db.Model):
 
     def __repr__(self):
         return '<owned %r>' % self.id
+
+    @classmethod
+    def get_shares(cls,account_no):
+        shr = cls.query.filter_by(demat_ac=account_no).all()
+        return shr
 
 
 class transactions(db.Model):
