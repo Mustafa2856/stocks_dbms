@@ -10,7 +10,7 @@
             "request": "launch",
             "module": "flask",
             "env": {
-                "DATABASE_URL": "postgresql://postgres:neel/stocks_dbms",
+                "DATABASE_URL": "postgresql://postgres:neel@localhost:5432/stocks_dbms",
                 "FLASK_APP": "app.py",
                 "FLASK_ENV": "development"
             },
