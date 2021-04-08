@@ -33,6 +33,7 @@ def get_shrs_yf(cmp,period='1d',interval='1m'):
       s_time = time.time()
 
 from models import User, Bank_Details, demat, company, shares, portfolio, transactions
+
 comp = company.query.all()
 cmp = {}
 for i in comp:
@@ -75,7 +76,7 @@ def register():
          db.session.commit()
          session['current_user'] = User.query.filter_by(username=frm['username']).first()
          session['current_demat'] = demat.query.filter_by(User_id=frm['username']).first()
-         session['current_trans'] = transactions.query.filter_by(demat_ac=session.get('current_demat',None))
+         session['current_trans'] = transactions.get_trs(session['current_demat'].account_no)
       except Exception as exp:
          print(exp)
          flash("Improper details")
@@ -92,6 +93,8 @@ def user_home():
    if user == None:
       flash('Login to Access Account Details')
       return redirect('/login')
+   if trans==None:
+      trans=[]
    return render_template('/user_home.html',user=user,dmt=dmt,trans=trans)
 
 @app.route('/personal_details',methods=['POST','GET'])
