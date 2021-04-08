@@ -4,6 +4,10 @@ from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
+import numpy as np
+import pandas as pd
+import yfinance as yf
+import time
 
 app = Flask(__name__)
 
@@ -17,8 +21,19 @@ app.config['SESSION_PERMANENT'] = False
 app.config['SECRET_KEY'] = "secret key"
 Session(app)
 
+s_time = None
+shrs_data = None
+year_shr_data = None
+def get_shrs_yf(cmp,period='1d',interval='1m'):
+   comp = str(cmp).translate([None,'[],\''])
+   global shrs_data ,year_shr_data
+   global s_time
+   if s_time==None or time.time() - s_time > 60:
+      shrs_data = yf.download(tickers=cmp,period='1d',interval='1m')
+      s_time = time.time()
 
 from models import User, Bank_Details, demat, company, shares, portfolio, transactions
+
 comp = company.query.all()
 shars = shares.query.all()
 cmp = {}
@@ -27,6 +42,8 @@ for i in comp:
    cmp[i.id] = i
 for i in shars:
    shrs[i.company_id] = i
+
+
 @app.route('/',methods=['POST','GET'])
 def home():
    user = session.get('current_user',None)
@@ -94,7 +111,8 @@ def personal_details():
 @app.route('/company_details',methods=['POST','GET'])
 def company_details():
    user = session.get('current_user',None)
-   return render_template('/company_details.html',user=user)
+   get_shrs_yf(list(cmp.keys()))
+   return render_template('/company_details.html',user=user,shrs=shrs_data)
 
 @app.route('/logout',methods=['POST','GET'])
 def logout():
@@ -103,18 +121,17 @@ def logout():
    session['current_trans']=None
    return redirect('/')
 
-
-
 @app.route('/portfolio',methods=['POST','GET'])
 def porfolio():
    user = session.get('current_user',None)
    dmt = session.get('current_demat',None)
    trans = session.get('current_trans',None)
    pft = portfolio.get_shares(dmt.account_no)
+   get_shrs_yf(list(cmp.keys()))
    if user == None:
       flash('Login to Accesss Potfolio')
       return redirect('/login')
-   return render_template('/portfolio.html',user=user,dmt=dmt,trans=trans,pft=pft,cmp=cmp,shrs=shrs)
+   return render_template('/portfolio.html',user=user,dmt=dmt,trans=trans,pft=pft,cmp=cmp,shrs=shrs_data)
 
 
 @app.route('/trade',methods=['POST','GET'])

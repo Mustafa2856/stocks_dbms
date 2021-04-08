@@ -119,13 +119,13 @@
                     <b> {{cmp[port.company_id].name}}</b>
                 </div>
                 <div id="current_investment">
-                    &nbsp;   &nbsp; ${{shrs[port.company_id].open_price * port.quantity}}
+                    &nbsp;   &nbsp; ${{shrs['Open'][port.company_id][-1]|float * port.quantity}}
                 </div>
             </div>
             <br>
             <div class="p">
                 <div id="current_price">
-                    Current Price : ${{shrs[port.company_id].open_price}}
+                    Current Price : ${{shrs['Open'][port.company_id][-1]}}
                 </div>
                 <div id="buy_price">
                     &nbsp;   &nbsp;Buy price : ${{port.bid_price}}
@@ -143,12 +143,12 @@
             <br>
             <div id="profit_loss">
                 <!-- ( buy_price < current_price ? Profit : Loss ) -->
-                {% if shrs[port.company_id].open_price * port.quantity < port.bid_price * port.quantity %}
+                {% if shrs['Open'][port.company_id][-1] * port.quantity < port.bid_price * port.quantity %}
                 Loss : 
                 {% else %}
                 Profit :
                 {% endif %}
-                ${{(shrs[port.company_id].open_price * port.quantity - port.bid_price * port.quantity)|abs}}
+                ${{((shrs['Open'][port.company_id][-1] * port.quantity)|float - (port.bid_price * port.quantity)|float)|abs}}
             </div>
             <hr>
         </div>
