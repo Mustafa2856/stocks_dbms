@@ -33,17 +33,11 @@ def get_shrs_yf(cmp,period='1d',interval='1m'):
       s_time = time.time()
 
 from models import User, Bank_Details, demat, company, shares, portfolio, transactions
-""" 
-""" comp = company.query.all()
-shars = shares.query.all()
+comp = company.query.all()
 cmp = {}
-shrs = {}
 for i in comp:
    cmp[i.id] = i
-for i in shars:
-   shrs[i.company_id] = i
- """
- """
+
 @app.route('/',methods=['POST','GET'])
 def home():
    user = session.get('current_user',None)
