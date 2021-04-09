@@ -123,11 +123,11 @@ def porfolio():
    user = session.get('current_user',None)
    dmt = session.get('current_demat',None)
    trans = session.get('current_trans',None)
-   pft = portfolio.get_shares(dmt.account_no)
-   get_shrs_yf(list(cmp.keys()))
    if user == None:
       flash('Login to Accesss Potfolio')
       return redirect('/login')
+   pft = portfolio.get_shares(dmt.account_no)
+   get_shrs_yf(list(cmp.keys()))
    return render_template('/portfolio.html',user=user,dmt=dmt,trans=trans,pft=pft,cmp=cmp,shrs=shrs_data)
 
 
