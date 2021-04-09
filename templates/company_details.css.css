@@ -1,0 +1,114 @@
+#Company_Details {
+    display: flex;
+    flex-direction: column;
+    padding: 3px 200px;
+    height: 740px;
+    justify-content: center;
+    align-items: center;
+}
+
+#Company_Details::before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 968px;
+    width: 100%;
+    z-index: -1;
+    opacity: 0.95;
+}
+
+#Company_Details h1 {
+    color: white;
+    font-size: 3rem;
+    display: block;
+    width: 80%;
+    background-color: gray;
+    border-radius: 30px;
+    padding: 10px 10px;
+    text-align: center;
+}
+
+.Company_Details .item {
+    color: black;
+    background-color: gold;
+    margin: 10px;
+    display: block;
+    width: 300px;
+    height: 40px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 1.4rem;
+}
+
+.Companies {
+    font-size: 1.8rem;
+    margin: 5px;
+}
+
+.Companies a {
+    color: black;
+    background-color: #ffb6c1;
+    display: block;
+    width: 400px;
+    height: 60px;
+    padding: 10px 10px;
+    border-radius: 20px;
+    text-decoration: none;
+}
+
+.Companies a:hover {
+    color: black;
+    background-color: lightgoldenrodyellow;
+}
+
+.Company_Heading a {
+    color: white;
+    font-size: 3rem;
+    display: block;
+    width: 80%;
+    background-color: gray;
+    border-radius: 30px;
+    padding: 10px 10px;
+}
+
+.Company_Heading a:hover {
+    color: white;
+    font-size: 3rem;
+    display: block;
+    width: 80%;
+    background-color: lightgray;
+    border-radius: 30px;
+    padding: 10px 10px;
+}
+
+.Companies {
+    cursor: pointer;
+}
+
+#heading {
+    background-color: orange;
+    font-size: 1.4rem;
+}
+
+table{
+    border-collapse: separate;
+    border-spacing: 15px 15px;
+    color: #2f4f4f;
+    
+}
+
+td{
+    text-align: center;
+    font-size: 30px;
+    background-color:#dcdcdc;
+
+    border-radius: 30px;
+}
+
+th{
+
+    font-size: 30px;
+    background-color:#dcdcdc;
+    border-radius: 30px;
+}
