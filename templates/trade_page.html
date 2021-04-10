@@ -102,7 +102,7 @@ button:hover {
     function price(){
 
    
-        var current_price=20;
+        var current_price="{{share_info['regularMarketPrice']}}";
         var quantity=document.getElementById("quantity").value;
         
         
@@ -137,6 +137,11 @@ button:hover {
                  
             </tr>
             <tr>
+              <td>DEMAT A/C No:</td>
+              <td>{{dmt.account_no}}</td>
+               
+          </tr>
+            <tr>
                 <!-- Buy / Sell --> 
                 <td id="bs_quan">
                         Buy Quantity:
@@ -159,8 +164,7 @@ button:hover {
             <tr>
                 <td id="bs_capacity">
                     Buying Capacity:
-                </td id="cap">a
-                <td>
+                </td >  <td id="cap">
 <!-- (int) Available Funds / current price -->
                 <!-- / Shares Available (from portfolio) -->
                 </td>
@@ -175,7 +179,7 @@ button:hover {
                     <button class="cancel"  onclick="history.back()">Cancel</button>
                 </td>
                 <td>
-                    <button id="btn">
+                    <button id="btn" onClick="check_trans()">
                         Buy
                    <!-- Sell -->
                     </button>
@@ -185,9 +189,8 @@ button:hover {
     </div>
 <script>
       var max='{{dmt.Funds_Avail}}'/"{{share_info['regularMarketPrice']}}";
-           console.log(max)
-           console.log('{{trade_type}}')
-           console.log(document.getElementById("cap").innerHTML)
+      max=Math.floor(max);
+          
        if("Sell"=='{{trade_type}}'){
            
           
@@ -201,8 +204,28 @@ button:hover {
             document.getElementById("bs_capacity").innerHTML="Buying Capacity"
             document.getElementById("total").innerHTML="Total Amount Debit:"
             document.getElementById("btn").innerHTML="Buy"
-            document.getElementById("cap").innerHTML=max;
+            document.getElementById("cap").innerHTML=max+" number of shares";
        }
      
+     function check_trans(){
+      var quantity=document.getElementById("quantity").value;
+      if(quantity==0){
+        alert("Please enter quantity!!!")
+        return false;
+      }
+        if('{{trade_type}}'=="Buy"){
+          if(quantity>max){
+            alert("Not Sufficient Balance to buy "+ quantity+" shares. \n Please enter quantity less than or equal to "+max);
+            return false;
+          }
+          else{
+
+            return true;
+          }
+        }
+        else{
+
+        }
+     }
 </script>
 {% endblock %}
