@@ -25,21 +25,40 @@ s_time = None
 shrs_data = None
 year_shr_data = None
 share_info = None
-def get_shrs_yf(cmp,period='1d',interval='1m'):
+def get_shrs_yf(cmp,period='1d',interval='1m',change_gl=True):
    comp = str(cmp).translate([None,'[],\''])
    global shrs_data ,share_info,year_shr_data
    global s_time
    if s_time==None or time.time() - s_time > 60:
-      shrs_data = yf.download(tickers=cmp,period='1d',interval='1m')
-      share_info=yf.Ticker("MSFT").info
+      shar_data = yf.download(tickers=cmp,period='1d',interval='1m')
+      share_info = {}
+      get_company_info(cmp,True)
       s_time = time.time()
+   if change_gl:
+      shrs_data = shar_data
+   return shar_data
+
+def get_company_info(cmp,change_gl):
+   if change_gl:
+      global share_info
+      if share_info:
+         return
+   else:
+      share_info = {}
+   for c in cmp:
+      share_info[c] = yf.Ticker(c).info
+   return share_info
 
 from models import User, Bank_Details, demat, company, shares, portfolio, transactions
-
-comp = company.query.all()
-cmp = {}
-for i in comp:
-   cmp[i.id] = i
+comp = None
+cmp=None
+def updt_cmp():
+   global comp, cmp
+   comp = company.query.all()
+   cmp = {}
+   for i in comp:
+      cmp[i.id] = i
+updt_cmp()
 
 @app.route('/',methods=['POST','GET'])
 def home():
@@ -111,41 +130,8 @@ def personal_details():
 def company_details():
    user = session.get('current_user',None)
    get_shrs_yf(list(cmp.keys()))
-   
-   fig = go.Figure()
-   #Candlestick
-   fig.add_trace(go.Candlestick(x=shrs_data.index,
-                  open=shrs_data['Open'],
-                  high=shrs_data['High'],
-                  low=shrs_data['Low'],
-                  close=shrs_data['Close'], name = 'market data'))
-  
-   # Add titles
-   fig.update_layout(
-      title='UBER',
-      yaxis_title='Stock Price (Rupees per Shares)')
-   
-   # X-Axes
-   fig.update_xaxes(
-   rangeslider_visible=True,
-   rangeselector=dict(
-         buttons=list([
-               dict(count=15, label="15m", step="minute", stepmode="backward"),
-               dict(count=45, label="45m", step="minute", stepmode="backward"),
-               dict(count=1, label="HTD", step="hour", stepmode="todate"),
-               dict(count=3, label="3h", step="hour", stepmode="backward"),
-               dict(step="all")
-         ])
-      )
-   )
-
-   #Show
-   """ fig.show() """
-   fig.write_image('my_plot.jpeg')
-  
-  
-  
-   return render_template('/company_details.html',user=user,shrs=share_info)
+   print(share_info)
+   return render_template('/company_details.html',user=user,shrs=share_info,shrs_curr=shrs_data)
 
 @app.route('/logout',methods=['POST','GET'])
 def logout():
@@ -166,21 +152,45 @@ def porfolio():
    get_shrs_yf(list(cmp.keys()))
    return render_template('/portfolio.html',user=user,dmt=dmt,trans=trans,pft=pft,cmp=cmp,shrs=shrs_data)
 
-
-@app.route('/trade_buy',methods=['POST','GET'])
-def trade_buy():
+@app.route('/trade',methods=['POST','GET'])
+def trade():
    user = session.get('current_user',None)
    dmt = session.get('current_demat',None)
+   pft = portfolio.get_shares(dmt.account_no)
    if user == None:
       flash('Login to Access Trade Page')
       return redirect('/login')
-   return render_template('/trade_page.html',user=user,trade_type="Buy",dmt=dmt,share_info=share_info)
-
-@app.route('/trade_sell',methods=['POST','GET'])
-def trade_sell():
-   user = session.get('current_user',None)
-   dmt = session.get('current_demat',None)
-   if user == None:
-      flash('Login to Access Trade Page')
-      return redirect('/login')
-   return render_template('/trade_page.html',user=user,trade_type="Sell",dmt=dmt,share_info=share_info)
+   if request.method == 'GET' :
+      # tp -> 0 -> sell , tp -> 1 -> buy
+      company_to_trade = request.args.get('cmp')
+      max_lim = 0
+      if company_to_trade:
+         if cmp.get(company_to_trade,None):
+            shr_info = get_company_info(company_to_trade,False)
+            get_shrs_yf(list(cmp.keys()))
+            #print(shr_info)
+            if request.args.get('tp') == 0:
+               return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=shr_info)
+            else:
+               for shr in pft:
+                  if shr.company_id == company_to_trade:
+                     max_lim = shr.quantity
+                     break
+               return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=shr_info,max_lim=max_lim,sell=True)
+         else:
+            try:
+               dat = get_shrs_yf([company_to_trade,],period='1y',interval='1d',change_gl=False)
+               if dat.empty:
+                  print('Company not Found')
+               else:
+                  shr_info = get_company_info(company_to_trade,False)
+                  #print(shr_info)
+                  db.session.add(company(company_to_trade,company_to_trade,'-',dat['High'].max(skipna=True),dat['Low'].min(skipna=True)))
+                  db.session.commit()
+                  updt_cmp()
+                  return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=shr_info)
+            except Exception as exp:
+               print(exp)
+   if share_info == None:
+      get_shrs_yf(list(cmp.keys()))
+   return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=share_info['AAPL'])
