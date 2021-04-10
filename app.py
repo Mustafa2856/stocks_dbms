@@ -130,7 +130,7 @@ def personal_details():
 def company_details():
    user = session.get('current_user',None)
    get_shrs_yf(list(cmp.keys()))
-   print(share_info)
+   #print(share_info.keys())
    return render_template('/company_details.html',user=user,shrs=share_info,shrs_curr=shrs_data)
 
 @app.route('/logout',methods=['POST','GET'])
@@ -168,7 +168,7 @@ def trade():
          if cmp.get(company_to_trade,None):
             shr_info = get_company_info(company_to_trade,False)
             get_shrs_yf(list(cmp.keys()))
-            #print(shr_info)
+            print("check1"+shr_info)
             if request.args.get('tp') == 0:
                return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=shr_info)
             else:
@@ -184,7 +184,7 @@ def trade():
                   print('Company not Found')
                else:
                   shr_info = get_company_info(company_to_trade,False)
-                  #print(shr_info)
+                  print("check2"+shr_info)
                   db.session.add(company(company_to_trade,company_to_trade,'-',dat['High'].max(skipna=True),dat['Low'].min(skipna=True)))
                   db.session.commit()
                   updt_cmp()

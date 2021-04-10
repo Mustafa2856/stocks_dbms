@@ -188,17 +188,33 @@ button:hover {
         </table>
     </div>
 <script>
+  var getParams = function (url) {
+	var params = {};
+	var parser = document.createElement('a');
+	parser.href = url;
+	var query = parser.search.substring(1);
+	var vars = query.split('&');
+	for (var i = 0; i < vars.length; i++) {
+		var pair = vars[i].split('=');
+		params[pair[0]] = decodeURIComponent(pair[1]);
+	}
+	return params;
+};
+var trade_type=getParams(window.location.href)['trade_type'];
+
       var max='{{dmt.Funds_Avail}}'/"{{share_info['regularMarketPrice']}}";
       max=Math.floor(max);
-          
-       if("Sell"=='{{trade_type}}'){
+      console.log('{{max_lim}}'+"-------neel")
+         console.log('{{sell}}')
+       if("Sell"==trade_type){
            
           
            document.getElementById("bs_quan").innerHTML="Selling Quantity"
            document.getElementById("bs_capacity").innerHTML="Shares Available"
            document.getElementById("total").innerHTML="Total Proceeds:"
            document.getElementById("btn").innerHTML="Sell"
-       }else if("Buy"=='{{trade_type}}'){
+           document.getElementById("cap").innerHTML='{{max_lim}}';
+       }else if("Buy"==trade_type){
        
             document.getElementById("bs_quan").innerHTML="Buying Quantity"
             document.getElementById("bs_capacity").innerHTML="Buying Capacity"
@@ -213,7 +229,7 @@ button:hover {
         alert("Please enter quantity!!!")
         return false;
       }
-        if('{{trade_type}}'=="Buy"){
+        if(trade_type=="Buy"){
           if(quantity>max){
             alert("Not Sufficient Balance to buy "+ quantity+" shares. \n Please enter quantity less than or equal to "+max);
             return false;

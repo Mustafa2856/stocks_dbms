@@ -148,7 +148,7 @@
         <center>
             <div class="Company_Heading">
                 <div>
-                    <h1>{{shrs['shortName']}}  ${{shrs['regularMarketPrice']}} 
+                    <h1>{{shrs['MSFT']['shortName']}}  ${{shrs['MSFT']['regularMarketPrice']}} 
                         <label id="pc"></label></h1>
                          
                 </div>
@@ -158,33 +158,33 @@
                 
 
                 <tr>
-                    <td>High Price: ${{shrs['regularMarketDayHigh']}}</td>
-                    <td>Low Price: ${{shrs['regularMarketDayLow']}}</td>
+                    <td>High Price: ${{shrs['MSFT']['regularMarketDayHigh']}}</td>
+                    <td>Low Price: ${{shrs['MSFT']['regularMarketDayLow']}}</td>
                 </tr>
 
                 <tr>
-                    <td>Open Price: ${{shrs['regularMarketOpen']}}</td>
-                    <td>Volume: ${{shrs['volume']   }}</td>
+                    <td>Open Price: ${{shrs['MSFT']['regularMarketOpen']}}</td>
+                    <td>Volume: ${{shrs['MSFT']['volume']   }}</td>
                 </tr>
 
                 <tr>
-                    <td>sector : {{shrs['sector']}}</td>
-                    <td>Market-Cap: {{'%0.3f'%(shrs['marketCap']/1000000000)|float}}T</td>
+                    <td>sector : {{shrs['MSFT']['sector']}}</td>
+                    <td>Market-Cap: {{'%0.3f'%(shrs['MSFT']['marketCap']/1000000000)|float}}T</td>
                 </tr>
 
                 <tr>
-                    <td>52-Week High: {{shrs['fiftyTwoWeekHigh']}}</td>
-                    <td>52-Week Low: {{shrs['fiftyTwoWeekLow']}}</td>
+                    <td>52-Week High: {{shrs['MSFT']['fiftyTwoWeekHigh']}}</td>
+                    <td>52-Week Low: {{shrs['MSFT']['fiftyTwoWeekLow']}}</td>
                 </tr>
 
                 <tr>
-                    <td>P/E ratio: {{shrs['trailingPE']}}</td>
-                    <td>Dividend: {{shrs['dividendYield']}}</td>
+                    <td>P/E ratio: {{shrs['MSFT']['trailingPE']}}</td>
+                    <td>Dividend: {{shrs['MSFT']['dividendYield']}}</td>
                 </tr>
 
                 <tr>
-                    <td><a href="/trade_buy"><button>Buy</button></a></td>
-                    <td><a href="/trade_sell"><button>Sell</button></a></td>
+                    <td><a href="/trade?trade_type=Buy"><button>Buy</button></a></td>
+                    <td><a href="/trade?trade_type=Sell"><button>Sell</button></a></td>
                 </tr>
             </table>
         </center>
@@ -194,8 +194,8 @@
 
 </body>
 <script>
-    var percentage="{{'%0.2f'%(shrs['regularMarketPrice']-shrs['regularMarketPreviousClose'])|float}}"/"{{shrs['regularMarketPreviousClose']}}" *100;
-    var change="{{'%0.2f'%(shrs['regularMarketPrice']-shrs['regularMarketPreviousClose'])|float}}" ;
+    var percentage="{{'%0.2f'%(shrs['MSFT']['regularMarketPrice']-shrs['MSFT']['regularMarketPreviousClose'])|float}}"/"{{shrs['MSFT']['regularMarketPreviousClose']}}" *100;
+    var change="{{'%0.2f'%(shrs['MSFT']['regularMarketPrice']-shrs['MSFT']['regularMarketPreviousClose'])|float}}" ;
     percentage=percentage.toFixed(2);
     
     if(percentage<0){
