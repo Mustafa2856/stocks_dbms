@@ -112,28 +112,13 @@ button:hover {
        
     }
 
-    function buy_sell(){
-       var bs=document.getElementById("bs").innerHTML;
+   
        
-       if(bs==="Buy"){
-           
-           document.getElementById("bs").innerHTML="Sell"
-           document.getElementById("bs_quan").innerHTML="Selling Quantity"
-           document.getElementById("bs_capacity").innerHTML="Shares Available"
-           document.getElementById("total").innerHTML="Total Proceeds:"
-           document.getElementById("btn").innerHTML="Sell"
-       }else if(bs=="Sell"){
-       
-            document.getElementById("bs").innerHTML="Buy";
-            document.getElementById("bs_quan").innerHTML="Buying Quantity"
-            document.getElementById("bs_capacity").innerHTML="Buying Capacity"
-            document.getElementById("total").innerHTML="Total Amount Debit:"
-            document.getElementById("btn").innerHTML="Buy"
-       }
      
-    }
+    
+    
 </script>
-<button id="bs" onClick="return buy_sell()">Buy</button>
+ <button id="bs" onClick="return buy_sell()">Buy</button> 
     <div class="trade">
         <h1>Place Order</h1>
         <table>
@@ -143,12 +128,12 @@ button:hover {
             </tr>
             <tr>
                 <td>Comapany Name:</td>
-                <td>Reliance Industries Limited</td>
+                <td>{{share_info['shortName']}}</td>
                   
             </tr>
             <tr>
                 <td>Market Price:</td>
-                <td>$20</td>
+                <td>${{share_info['regularMarketPrice']}}</td>
                  
             </tr>
             <tr>
@@ -167,17 +152,17 @@ button:hover {
                
             </tr>
             <tr>
-                <td>Available Funds:</td>
-                <td> </td>
+                <td>Available Funds: </td>
+                <td>{{dmt.Funds_Avail}} </td>
                  
             </tr>
             <tr>
                 <td id="bs_capacity">
                     Buying Capacity:
-                </td><!-- (int) Available Funds / current price -->
-                <!-- / Shares Available (from portfolio) -->
+                </td id="cap">a
                 <td>
-
+<!-- (int) Available Funds / current price -->
+                <!-- / Shares Available (from portfolio) -->
                 </td>
             </tr>
             <tr>
@@ -187,7 +172,7 @@ button:hover {
             <tr>
                 
                 <td>
-                    <button class="cancel">Cancel</button>
+                    <button class="cancel"  onclick="history.back()">Cancel</button>
                 </td>
                 <td>
                     <button id="btn">
@@ -198,5 +183,26 @@ button:hover {
             </tr>
         </table>
     </div>
-
+<script>
+      var max='{{dmt.Funds_Avail}}'/"{{share_info['regularMarketPrice']}}";
+           console.log(max)
+           console.log('{{trade_type}}')
+           console.log(document.getElementById("cap").innerHTML)
+       if("Sell"=='{{trade_type}}'){
+           
+          
+           document.getElementById("bs_quan").innerHTML="Selling Quantity"
+           document.getElementById("bs_capacity").innerHTML="Shares Available"
+           document.getElementById("total").innerHTML="Total Proceeds:"
+           document.getElementById("btn").innerHTML="Sell"
+       }else if("Buy"=='{{trade_type}}'){
+       
+            document.getElementById("bs_quan").innerHTML="Buying Quantity"
+            document.getElementById("bs_capacity").innerHTML="Buying Capacity"
+            document.getElementById("total").innerHTML="Total Amount Debit:"
+            document.getElementById("btn").innerHTML="Buy"
+            document.getElementById("cap").innerHTML=max;
+       }
+     
+</script>
 {% endblock %}

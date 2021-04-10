@@ -116,7 +116,14 @@
         font-size: 30px;
         background-color:#dcdcdc;
         border-radius: 30px;
-    }</style>
+    }
+    button{
+        width:100%;  
+        font-size: 30px;
+        background-color:#dcdcdc;
+        border-radius: 30px;  
+    }
+    </style>   
     <section id="Company_Details">
         <h1 align="center">Company Details</h1>
         <div class="Companies">
@@ -140,52 +147,63 @@
     <section id="Rel" class="Company_Details">
         <center>
             <div class="Company_Heading">
-                <a href="#Company_Details">
-                    <center>Reliance Industries Limited</center>
-                </a>
-            </div>
-
+                <div>
+                    <h1>{{shrs['shortName']}}  ${{shrs['regularMarketPrice']}} 
+                        <label id="pc"></label></h1>
+                         
+                </div>
+             </div>
 
             <table  style="width: 70%; height: 50%;">
+                
+
                 <tr>
-                    <th>Details</th>
-                    <th>Details</th>
+                    <td>High Price: ${{shrs['regularMarketDayHigh']}}</td>
+                    <td>Low Price: ${{shrs['regularMarketDayLow']}}</td>
                 </tr>
 
                 <tr>
-                    <td>High Price</td>
-                    <td>Low Price</td>
+                    <td>Open Price: ${{shrs['regularMarketOpen']}}</td>
+                    <td>Volume: ${{shrs['volume']   }}</td>
                 </tr>
 
                 <tr>
-                    <td>Open Price</td>
-                    <td>Volume</td>
+                    <td>sector : {{shrs['sector']}}</td>
+                    <td>Market-Cap: {{'%0.3f'%(shrs['marketCap']/1000000000)|float}}T</td>
                 </tr>
 
                 <tr>
-                    <td>Change</td>
-                    <td>Market-Cap</td>
+                    <td>52-Week High: {{shrs['fiftyTwoWeekHigh']}}</td>
+                    <td>52-Week Low: {{shrs['fiftyTwoWeekLow']}}</td>
                 </tr>
 
                 <tr>
-                    <td>52-Week High</td>
-                    <td>52-Week Low</td>
+                    <td>P/E ratio: {{shrs['trailingPE']}}</td>
+                    <td>Dividend: {{shrs['dividendYield']}}</td>
                 </tr>
 
                 <tr>
-                    <td>Ask Price</td>
-                    <td>Bid Price</td>
-                </tr>
-
-                <tr>
-                    <td>Ask Size</td>
-                    <td>Bid Size</td>
+                    <td><a href="/trade_buy"><button>Buy</button></a></td>
+                    <td><a href="/trade_sell"><button>Sell</button></a></td>
                 </tr>
             </table>
         </center>
-
+        <img src="/my_plot.jpeg">
     </section>
 
 
 </body>
+<script>
+    var percentage="{{'%0.2f'%(shrs['regularMarketPrice']-shrs['regularMarketPreviousClose'])|float}}"/"{{shrs['regularMarketPreviousClose']}}" *100;
+    var change="{{'%0.2f'%(shrs['regularMarketPrice']-shrs['regularMarketPreviousClose'])|float}}" ;
+    percentage=percentage.toFixed(2);
+    
+    if(percentage<0){
+
+    }else{
+        document.getElementById("pc").innerHTML="+"+change+" ( +"+percentage+" %)";
+        document.getElementById("pc").style.color="green";
+    }
+   
+</script>
 {% endblock %}

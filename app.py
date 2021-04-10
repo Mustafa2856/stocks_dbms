@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 import time
-
+import plotly.graph_objs as go
 app = Flask(__name__)
 
 
@@ -24,12 +24,14 @@ Session(app)
 s_time = None
 shrs_data = None
 year_shr_data = None
+share_info = None
 def get_shrs_yf(cmp,period='1d',interval='1m'):
    comp = str(cmp).translate([None,'[],\''])
-   global shrs_data ,year_shr_data
+   global shrs_data ,share_info,year_shr_data
    global s_time
    if s_time==None or time.time() - s_time > 60:
       shrs_data = yf.download(tickers=cmp,period='1d',interval='1m')
+      share_info=yf.Ticker("MSFT").info
       s_time = time.time()
 
 from models import User, Bank_Details, demat, company, shares, portfolio, transactions
@@ -109,7 +111,41 @@ def personal_details():
 def company_details():
    user = session.get('current_user',None)
    get_shrs_yf(list(cmp.keys()))
-   return render_template('/company_details.html',user=user,shrs=shrs_data)
+   
+   fig = go.Figure()
+   #Candlestick
+   fig.add_trace(go.Candlestick(x=shrs_data.index,
+                  open=shrs_data['Open'],
+                  high=shrs_data['High'],
+                  low=shrs_data['Low'],
+                  close=shrs_data['Close'], name = 'market data'))
+  
+   # Add titles
+   fig.update_layout(
+      title='UBER',
+      yaxis_title='Stock Price (Rupees per Shares)')
+   
+   # X-Axes
+   fig.update_xaxes(
+   rangeslider_visible=True,
+   rangeselector=dict(
+         buttons=list([
+               dict(count=15, label="15m", step="minute", stepmode="backward"),
+               dict(count=45, label="45m", step="minute", stepmode="backward"),
+               dict(count=1, label="HTD", step="hour", stepmode="todate"),
+               dict(count=3, label="3h", step="hour", stepmode="backward"),
+               dict(step="all")
+         ])
+      )
+   )
+
+   #Show
+   """ fig.show() """
+   fig.write_image('my_plot.jpeg')
+  
+  
+  
+   return render_template('/company_details.html',user=user,shrs=share_info)
 
 @app.route('/logout',methods=['POST','GET'])
 def logout():
@@ -131,10 +167,20 @@ def porfolio():
    return render_template('/portfolio.html',user=user,dmt=dmt,trans=trans,pft=pft,cmp=cmp,shrs=shrs_data)
 
 
-@app.route('/trade',methods=['POST','GET'])
-def trade():
+@app.route('/trade_buy',methods=['POST','GET'])
+def trade_buy():
    user = session.get('current_user',None)
+   dmt = session.get('current_demat',None)
    if user == None:
       flash('Login to Access Trade Page')
       return redirect('/login')
-   return render_template('/trade_page.html',user=user)
+   return render_template('/trade_page.html',user=user,trade_type="Buy",dmt=dmt,share_info=share_info)
+
+@app.route('/trade_sell',methods=['POST','GET'])
+def trade_sell():
+   user = session.get('current_user',None)
+   dmt = session.get('current_demat',None)
+   if user == None:
+      flash('Login to Access Trade Page')
+      return redirect('/login')
+   return render_template('/trade_page.html',user=user,trade_type="Sell",dmt=dmt,share_info=share_info)
