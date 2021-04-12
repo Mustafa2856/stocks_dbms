@@ -204,17 +204,13 @@ var trade_type=getParams(window.location.href)['trade_type'];
 
       var max='{{dmt.Funds_Avail}}'/"{{share_info['regularMarketPrice']}}";
       max=Math.floor(max);
-      console.log('{{max_lim}}'+"-------neel")
-         console.log('{{sell}}')
-       if("Sell"==trade_type){
-           
-          
+       if('{{sell}}'==1){
            document.getElementById("bs_quan").innerHTML="Selling Quantity"
            document.getElementById("bs_capacity").innerHTML="Shares Available"
            document.getElementById("total").innerHTML="Total Proceeds:"
            document.getElementById("btn").innerHTML="Sell"
            document.getElementById("cap").innerHTML='{{max_lim}}';
-       }else if("Buy"==trade_type){
+       }else {
        
             document.getElementById("bs_quan").innerHTML="Buying Quantity"
             document.getElementById("bs_capacity").innerHTML="Buying Capacity"
@@ -222,25 +218,46 @@ var trade_type=getParams(window.location.href)['trade_type'];
             document.getElementById("btn").innerHTML="Buy"
             document.getElementById("cap").innerHTML=max+" number of shares";
        }
-     
+    function autoRefresh() {
+        window.location = window.location.href;
+    }
+    setInterval('autoRefresh()', 60000);
      function check_trans(){
       var quantity=document.getElementById("quantity").value;
       if(quantity==0){
         alert("Please enter quantity!!!")
         return false;
       }
-        if(trade_type=="Buy"){
+        if('{{sell}}'==1){
+          if('{{max_lim}}'==0){
+            alert("You Don't have Any Shares Available to Sell!!")
+          }
+          if('{{max_lim}}'<quantity){
+            alert("Not Sufficient Shares Available in DEMAT to Sell "+quantity+" Share!!!")
+          }
+          else{
+            location.href="/user_home?trade=1&company_id"+"{{share_info['symbol']}}"+
+            "&company="+"{{share_info['shortName']}}"+
+            "&buy=0"+
+            "&price="+"{{share_info['regularMarketPrice']}}"+
+            "&quantity="+document.getElementById("quantity").value;+
+            "&status=1"
+           
+          }
+        }
+        else{
           if(quantity>max){
             alert("Not Sufficient Balance to buy "+ quantity+" shares. \n Please enter quantity less than or equal to "+max);
             return false;
           }
           else{
-
-            return true;
+            location.href="/user_home?trade=1&company_id"+"{{share_info['symbol']}}"+
+            "&company="+"{{share_info['shortName']}}"+
+            "&buy=1"+
+            "&price="+"{{share_info['regularMarketPrice']}}"+
+            "&quantity="+document.getElementById("quantity").value;+
+            "&status=1"
           }
-        }
-        else{
-
         }
      }
 </script>

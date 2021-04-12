@@ -130,20 +130,20 @@
 
 <input type="search" name="cmps" list="list1">
 <datalist id="list1">
-    <option value="a"></option>
-    <option value="b"></option>
-    <option value="c"></option>
-    <option value="d"></option>
+    {% for company in cmp_list %}
+        <option value="{{company}}"></option>
+    {% endfor %}
 </datalist>
-    <button id="Search"  onclick="fun()" window.location.href="http://Comapany_details?comp="+fun() > Search</button>
+    <button id="Search"  onclick="fun()"  > Search</button>
 
-
-
+    
+    {% if flag == 0 %}
+    {% else %}
     <section id="Rel" class="Company_Details">
         <center>
             <div class="Company_Heading">
                 <div>
-                    <h1>{{shrs['MSFT']['shortName']}}  ${{shrs['MSFT']['regularMarketPrice']}} 
+                    <h1>{{shrs['shortName']}}  ${{shrs['regularMarketPrice']}} 
                         <label id="pc"></label></h1>
                          
                 </div>
@@ -153,44 +153,44 @@
                 
 
                 <tr>
-                    <td>High Price: ${{shrs['MSFT']['regularMarketDayHigh']}}</td>
-                    <td>Low Price: ${{shrs['MSFT']['regularMarketDayLow']}}</td>
+                    <td>High Price: ${{shrs['regularMarketDayHigh']}}</td>
+                    <td>Low Price: ${{shrs['regularMarketDayLow']}}</td>
                 </tr>
 
                 <tr>
-                    <td>Open Price: ${{shrs['MSFT']['regularMarketOpen']}}</td>
-                    <td>Volume: ${{shrs['MSFT']['volume']   }}</td>
+                    <td>Open Price: ${{shrs['regularMarketOpen']}}</td>
+                    <td>Volume: ${{shrs['volume']   }}</td>
                 </tr>
 
                 <tr>
-                    <td>sector : {{shrs['MSFT']['sector']}}</td>
-                    <td>Market-Cap: {{'%0.3f'%(shrs['MSFT']['marketCap']/1000000000)|float}}T</td>
+                    <td>sector : {{shrs['sector']}}</td>
+                    <td>Market-Cap: {{'%0.3f'%(shrs['marketCap']/1000000000)|float}}T</td>
                 </tr>
 
                 <tr>
-                    <td>52-Week High: {{shrs['MSFT']['fiftyTwoWeekHigh']}}</td>
-                    <td>52-Week Low: {{shrs['MSFT']['fiftyTwoWeekLow']}}</td>
+                    <td>52-Week High: {{shrs['fiftyTwoWeekHigh']}}</td>
+                    <td>52-Week Low: {{shrs['fiftyTwoWeekLow']}}</td>
                 </tr>
 
                 <tr>
-                    <td>P/E ratio: {{shrs['MSFT']['trailingPE']}}</td>
-                    <td>Dividend: {{shrs['MSFT']['dividendYield']}}</td>
+                    <td>P/E ratio: {{shrs['trailingPE']}}</td>
+                    <td>Dividend: {{shrs['dividendYield']}}</td>
                 </tr>
 
                 <tr>
-                    <td><a href="/trade?trade_type=Buy"><button>Buy</button></a></td>
-                    <td><a href="/trade?trade_type=Sell"><button>Sell</button></a></td>
+                    <td><button onClick="return trade(1)">Buy</button></td>
+                    <td><button onClick="return trade(0)">Sell</button></td>
                 </tr>
             </table>
         </center>
         <img src="/my_plot.jpeg">
     </section>
 
-
+    {% endif %}
 </body>
 <script>
-    var percentage="{{'%0.2f'%(shrs['MSFT']['regularMarketPrice']-shrs['MSFT']['regularMarketPreviousClose'])|float}}"/"{{shrs['MSFT']['regularMarketPreviousClose']}}" *100;
-    var change="{{'%0.2f'%(shrs['MSFT']['regularMarketPrice']-shrs['MSFT']['regularMarketPreviousClose'])|float}}" ;
+    var percentage="{{'%0.2f'%(shrs['regularMarketPrice']-shrs['regularMarketPreviousClose'])|float}}"/"{{shrs['regularMarketPreviousClose']}}" *100;
+    var change="{{'%0.2f'%(shrs['regularMarketPrice']-shrs['regularMarketPreviousClose'])|float}}" ;
     percentage=percentage.toFixed(2);
     
     if(percentage<0){
@@ -203,13 +203,20 @@
     function fun(){
         
         var comp=document.getElementsByName('cmps')[0].value;
-            
-        return comp;
-            
-    
-    
-        }
-       
-   
+            if(!comp){
+                alert("Please Select a company & then search")
+                return false;
+            }
+            else{
+                location.href="/company_details?comp="+comp ;
+            }    
+    }
+    function trade(f){
+        location.href="/trade?tp="+f+"&cmp="+"{{shrs['symbol']}}";
+    } 
+    function autoRefresh() {
+        window.location = window.location.href;
+    }
+    setInterval('autoRefresh()', 60000);
 </script>
 {% endblock %}

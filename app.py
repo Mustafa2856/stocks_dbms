@@ -21,18 +21,26 @@ app.config['SESSION_PERMANENT'] = False
 app.config['SECRET_KEY'] = "secret key"
 Session(app)
 
-s_time = None
+s_time = time.time()-60
 shrs_data = None
 year_shr_data = None
-share_info = None
-def get_shrs_yf(cmp,period='1d',interval='1m',change_gl=True):
+share_info = {'previousClose': 0, 'regularMarketOpen': 0, 'regularMarketDayHigh': 0,'regularMarketPreviousClose': 253.20,'regularMarketDayLow': 0,'marketCap': 0,'dayLow': 0,'volume': 0,'fiftyTwoWeekHigh': 0,
+'fiftyTwoWeekLow': 0,'shortName': '','regularMarketPrice': 0
+}
+def get_shrs_yf(cmp,period='1d',interval='1m'):
+   #comp = str(cmp).translate([None,'[],\''])
+   global shrs_data ,share_info,year_shr_data
+   global s_time
+   shrs_data = yf.download(tickers=cmp,period='1d',interval='1m')
+   share_info=yf.Ticker(cmp).info
+   s_time = time.time()
+
+def port_shrs_yf(cmp,period='1d',interval='1m',change_gl=True):
    comp = str(cmp).translate([None,'[],\''])
    global shrs_data ,share_info,year_shr_data
    global s_time
    if s_time==None or time.time() - s_time > 60:
       shar_data = yf.download(tickers=cmp,period='1d',interval='1m')
-      share_info = {}
-      get_company_info(cmp,True)
       s_time = time.time()
    if change_gl:
       shrs_data = shar_data
@@ -116,7 +124,27 @@ def user_home():
       return redirect('/login')
    if trans==None:
       trans=[]
-   return render_template('/user_home.html',user=user,dmt=dmt,trans=trans)
+   if request.args.get('trade')=='1':
+      print("yes")
+      #location.href="/user_home?trade=1&company_id"+"{{share_info['symbol']}}"+
+      #      "&company="+"{{share_info['shortName']}}"+
+      #      "&buy=1"+
+      #      "&price="+"{{share_info['regularMarketPrice']}}"+
+      #      "&quantity="+document.getElementById("quantity").value;+
+      #      "&status=1"
+      form=request.args
+      print(form)
+      try:
+         #db.session.add(transactions(time.time(),form.get('company_id'),dmt,bool(form.get('buy')),float(form.get('price')),int(form.get('quantity')),form.get('status')))
+         #db.session.add(portfolio(form.get('company_id'),int(form.get('quantity')),float(form.get('price')),dmt))
+         #db.session.commit()
+      except Exception as exp:
+         #print(exp)
+         #flash("Improper details")
+         return render_template('/user_home.html')
+      return render_template('/user_home.html',user=user,dmt=dmt,trans=trans)
+   else:
+      return render_template('/user_home.html',user=user,dmt=dmt,trans=trans)
 
 @app.route('/personal_details',methods=['POST','GET'])
 def personal_details():
@@ -129,9 +157,12 @@ def personal_details():
 @app.route('/company_details',methods=['POST','GET'])
 def company_details():
    user = session.get('current_user',None)
-   get_shrs_yf(list(cmp.keys()))
-   #print(share_info.keys())
-   return render_template('/company_details.html',user=user,shrs=share_info,shrs_curr=shrs_data)
+   comp=request.args.get('comp')
+   if comp== None :
+      return render_template('/company_details.html',user=user,cmp_list=list(cmp.keys()),shrs=share_info,shrs_curr=shrs_data,flag=0)
+   else:
+      get_shrs_yf(comp)
+      return render_template('/company_details.html',user=user,cmp_list=list(cmp.keys()),shrs=share_info,shrs_curr=shrs_data,flag=1)
 
 @app.route('/logout',methods=['POST','GET'])
 def logout():
@@ -149,7 +180,7 @@ def porfolio():
       flash('Login to Accesss Potfolio')
       return redirect('/login')
    pft = portfolio.get_shares(dmt.account_no)
-   get_shrs_yf(list(cmp.keys()))
+   port_shrs_yf(list(cmp.keys()))
    return render_template('/portfolio.html',user=user,dmt=dmt,trans=trans,pft=pft,cmp=cmp,shrs=shrs_data)
 
 @app.route('/trade',methods=['POST','GET'])
@@ -166,17 +197,17 @@ def trade():
       max_lim = 0
       if company_to_trade:
          if cmp.get(company_to_trade,None):
-            shr_info = get_company_info(company_to_trade,False)
-            get_shrs_yf(list(cmp.keys()))
-            print("check1"+shr_info)
-            if request.args.get('tp') == 0:
-               return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=shr_info)
+            global s_time
+            if time.time() - s_time > 60 :
+               get_shrs_yf(company_to_trade)
+            if request.args.get('tp') == '1':
+               return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=share_info,sell=0)
             else:
                for shr in pft:
                   if shr.company_id == company_to_trade:
                      max_lim = shr.quantity
                      break
-               return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=shr_info,max_lim=max_lim,sell=True)
+               return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=share_info,max_lim=max_lim,sell=1)
          else:
             try:
                dat = get_shrs_yf([company_to_trade,],period='1y',interval='1d',change_gl=False)
