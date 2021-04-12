@@ -12,6 +12,9 @@
         align-items: center;
     }
     
+    #Search{
+        width: 20%;
+    }
     #Company_Details::before {
         content: "";
         position: absolute;
@@ -124,24 +127,16 @@
         border-radius: 30px;  
     }
     </style>   
-    <section id="Company_Details">
-        <h1 align="center">Company Details</h1>
-        <div class="Companies">
-            <center><a href="Reliance">Reliance Industries Limited</a></center>
-        </div>
-        <div class="Companies">
-            <center><a href="#B">B</a></center>
-        </div>
-        <div class="Companies">
-            <center><a href="#C">C</a></center>
-        </div>
-        <div class="Companies">
-            <center><a href="#D">D</a></center>
-        </div>
-        <div class="Companies">
-            <center><a href="#E">E</a></center>
-        </div>
-    </section>
+
+<input type="search" name="cmps" list="list1">
+<datalist id="list1">
+    <option value="a"></option>
+    <option value="b"></option>
+    <option value="c"></option>
+    <option value="d"></option>
+</datalist>
+    <button id="Search"  onclick="fun()" window.location.href="http://Comapany_details?comp="+fun() > Search</button>
+
 
 
     <section id="Rel" class="Company_Details">
@@ -204,6 +199,17 @@
         document.getElementById("pc").innerHTML="+"+change+" ( +"+percentage+" %)";
         document.getElementById("pc").style.color="green";
     }
+
+    function fun(){
+        
+        var comp=document.getElementsByName('cmps')[0].value;
+            
+        return comp;
+            
+    
+    
+        }
+       
    
 </script>
 {% endblock %}
