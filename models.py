@@ -170,8 +170,8 @@ class transactions(db.Model):
     quantity = db.Column(db.Integer)
     status = db.Column(db.Integer)
 
-    def __init__(self,timestamp,company_id,demat_ac,buy,price,quantity,status = 0):
-        self.timestamp = timestamp
+    def __init__(self,company_id,demat_ac,buy,price,quantity,status = 0):
+        #self.timestamp = timestamp
         self.company_id = company_id
         self.demat_ac = demat_ac
         self.buy = buy

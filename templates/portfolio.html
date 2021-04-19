@@ -119,7 +119,7 @@
                     <b> {{cmp[port.company_id].name}}</b>
                 </div>
                 <div id="current_investment">
-                    &nbsp;   &nbsp; ${{shrs['Open'][port.company_id][-1]|float * port.quantity}}
+                    &nbsp;   &nbsp; ${{(shrs['Open'][port.company_id][-1]|float) * port.quantity}}
                 </div>
             </div>
             <br>

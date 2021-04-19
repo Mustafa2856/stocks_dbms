@@ -9,6 +9,8 @@ import pandas as pd
 import yfinance as yf
 import time
 import plotly.graph_objs as go
+import datetime
+from sqlalchemy import create_engine
 app = Flask(__name__)
 
 
@@ -125,7 +127,6 @@ def user_home():
    if trans==None:
       trans=[]
    if request.args.get('trade')=='1':
-      print("yes")
       #location.href="/user_home?trade=1&company_id"+"{{share_info['symbol']}}"+
       #      "&company="+"{{share_info['shortName']}}"+
       #      "&buy=1"+
@@ -135,13 +136,13 @@ def user_home():
       form=request.args
       print(form)
       try:
-         #db.session.add(transactions(time.time(),form.get('company_id'),dmt,bool(form.get('buy')),float(form.get('price')),int(form.get('quantity')),form.get('status')))
-         #db.session.add(portfolio(form.get('company_id'),int(form.get('quantity')),float(form.get('price')),dmt))
-         #db.session.commit()
+         db.session.add(transactions(form.get('company_id'), dmt.account_no,bool(form.get('buy')),float(form.get('price')),int(form.get('quantity')),form.get('status')))
+         db.session.add(portfolio(form.get('company_id'),int(form.get('quantity')),float(form.get('price')),dmt.account_no))
+         db.session.commit()
       except Exception as exp:
-         #print(exp)
-         #flash("Improper details")
-         return render_template('/user_home.html')
+         print(exp)
+         flash("Improper details")
+         return render_template('/user_home.html',user=user,dmt=dmt,trans=trans)
       return render_template('/user_home.html',user=user,dmt=dmt,trans=trans)
    else:
       return render_template('/user_home.html',user=user,dmt=dmt,trans=trans)
@@ -225,3 +226,21 @@ def trade():
    if share_info == None:
       get_shrs_yf(list(cmp.keys()))
    return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=share_info['AAPL'])
+
+
+@app.route('/transaction',methods=['POST','GET'])
+def transaction():
+   user = session.get('current_user',None)
+   dmt = session.get('current_demat',None)
+   trans = session.get('current_trans',None)
+   if user == None:
+      flash('Login to Access Account Details')
+      return redirect('/login')
+   if trans==None:
+      trans=[]
+   engine = create_engine('postgresql://postgres:neel@localhost:5432/stocks_dbms')
+   with engine.connect() as con:
+      rs = con.execute('SELECT * FROM transactions where demat_ac='+str(dmt.account_no))
+      for row in rs:
+         print(row)
+   return render_template('/user_home.html',user=user,dmt=dmt,trans=trans)
