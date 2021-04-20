@@ -15,24 +15,28 @@
             <th id="Type" height="50px"><a href="dbms2.html" style="text-decoration: none;">Pending</a></th>
         </tr>
     </table>
-
+    {% for tr in transaction %}
     <div style=" align-self: center; display: grid;">
         <table id="t1" style="width: 100%;">
             <tr>
-                <th style="background-color: aqua; height: 30px;">Company Name</th>
-                <th  style="background-color: gray; height: 30px;"></th>
+                <th style="background-color: aqua; height: 30px;">Company</th>
+                <th  style="background-color: gray; height: 30px;">{{tr.company_id}}</th>
             </tr>
             <tr>
-                <td id="Par">Transaction Date</td>
-                <td id="Par">Price Per Share</td>
+                <td id="Par">Transaction Date : {{tr.timestamp}}</td>
+                <td id="Par">Price Per Share: {{tr.price}}</td>
             </tr>
             <tr>
-                <td id="Par">Quantity</td>
-                <td id="Par">Transaction Total</td>
+                <td id="Par">Quantity : {{tr.quantity}}</td>
+                <td id="Par">Transaction Total : {{tr.quantity * tr.price}}</td>
+            </tr>
+            <tr>
+                <td id="Par">Transaction type : {% if tr.buy==1 %} Buy {% else %} Sell {% endif %}</td>
+                <td id="Par">Transaction status : Success </td>
             </tr>
         </table>
 
     </div>
-
+    {% endfor %}
 
 </body>

@@ -143,11 +143,7 @@
             <br>
             <div id="profit_loss">
                 <!-- ( buy_price < current_price ? Profit : Loss ) -->
-                {% if shrs['Open'][port.company_id][-1] * port.quantity < port.bid_price * port.quantity %}
-                Loss : 
-                {% else %}
-                Profit :
-                {% endif %}
+               
                 ${{((shrs['Open'][port.company_id][-1] * port.quantity)|float - (port.bid_price * port.quantity)|float)|abs}}
             </div>
             <hr>

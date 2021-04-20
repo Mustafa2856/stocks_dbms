@@ -232,13 +232,13 @@ var trade_type=getParams(window.location.href)['trade_type'];
           if('{{max_lim}}'==0){
             alert("You Don't have Any Shares Available to Sell!!")
           }
-          if('{{max_lim}}'<quantity){
+          if(parseInt('{{max_lim}}')< quantity){
             alert("Not Sufficient Shares Available in DEMAT to Sell "+quantity+" Share!!!")
           }
           else{
             location.href="/user_home?trade=1&company_id="+"{{share_info['symbol']}}"+
             "&company="+"{{share_info['shortName']}}"+
-            "&buy=0"+
+            "&buy="+
             "&price="+"{{share_info['regularMarketPrice']}}"+
             "&quantity="+document.getElementById("quantity").value;+
             "&status=1"

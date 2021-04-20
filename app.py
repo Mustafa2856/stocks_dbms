@@ -44,8 +44,11 @@ def port_shrs_yf(cmp,period='1d',interval='1m',change_gl=True):
    if s_time==None or time.time() - s_time > 60:
       shar_data = yf.download(tickers=cmp,period='1d',interval='1m')
       s_time = time.time()
-   if change_gl:
-      shrs_data = shar_data
+      if change_gl:
+         shrs_data = shar_data
+   else:
+      shar_data = shrs_data 
+      
    return shar_data
 
 def get_company_info(cmp,change_gl):
@@ -182,6 +185,7 @@ def porfolio():
       return redirect('/login')
    pft = portfolio.get_shares(dmt.account_no)
    port_shrs_yf(list(cmp.keys()))
+   
    return render_template('/portfolio.html',user=user,dmt=dmt,trans=trans,pft=pft,cmp=cmp,shrs=shrs_data)
 
 @app.route('/trade',methods=['POST','GET'])
@@ -228,7 +232,7 @@ def trade():
    return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=share_info['AAPL'])
 
 
-@app.route('/transaction',methods=['POST','GET'])
+@app.route('/transactions',methods=['POST','GET'])
 def transaction():
    user = session.get('current_user',None)
    dmt = session.get('current_demat',None)
@@ -238,9 +242,10 @@ def transaction():
       return redirect('/login')
    if trans==None:
       trans=[]
-   engine = create_engine('postgresql://postgres:neel@localhost:5432/stocks_dbms')
+   """ engine = create_engine('postgresql://postgres:neel@localhost:5432/stocks_dbms')
    with engine.connect() as con:
       rs = con.execute('SELECT * FROM transactions where demat_ac='+str(dmt.account_no))
       for row in rs:
-         print(row)
-   return render_template('/user_home.html',user=user,dmt=dmt,trans=trans)
+         print(row) """
+   transaction = transactions.get_trs(dmt.account_no)
+   return render_template('/pending.html',user=user,dmt=dmt,trans=trans,transaction=transaction)

@@ -163,6 +163,7 @@ class transactions(db.Model):
     timestamp = db.Column(db.DateTime,default=datetime.datetime.now)
     company_id = db.Column(db.String(10),db.ForeignKey('company.id',ondelete='CASCADE'))
     company = db.relationship('company',backref=db.backref('trans_company',passive_deletes=True))
+    #company = db.Column(db.String(20),db.ForeignKey('company.name',ondelete='CASCADE'))
     demat_ac = db.Column(db.BigInteger,db.ForeignKey('demat.account_no',ondelete='CASCADE'))
     demat = db.relationship('demat',backref=db.backref('trans_demat',passive_deletes=True))
     buy = db.Column(db.Boolean)
@@ -178,6 +179,7 @@ class transactions(db.Model):
         self.price = price
         self.quantity = quantity
         self.status = status
+        #self.company=company
 
     def __repr__(self):
         return '<trans %r>' % self.id
