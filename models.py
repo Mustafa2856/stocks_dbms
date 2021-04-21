@@ -90,7 +90,7 @@ class demat(db.Model):
 class company(db.Model):
     __tablename__ = 'company'
 
-    id = db.Column(db.String(10),primary_key=True)
+    id = db.Column(db.String(150),primary_key=True)
     name = db.Column(db.String(200),unique=True)
     sector = db.Column(db.String(100))
     year_low = db.Column(db.Numeric)
@@ -111,7 +111,7 @@ class shares(db.Model):
     __tablename__ = 'shares'
 
     share_id = db.Column(db.Integer,primary_key=True)
-    company_id = db.Column(db.String(10),db.ForeignKey('company.id',ondelete='CASCADE'))
+    company_id = db.Column(db.String(150),db.ForeignKey('company.id',ondelete='CASCADE'))
     company = db.relationship('company',backref=db.backref('share_company',passive_deletes=True))
     prev_close = db.Column(db.Numeric)
     open_price = db.Column(db.Numeric)
@@ -136,7 +136,7 @@ class shares(db.Model):
 
 class portfolio(db.Model):
     id = db.Column(db.Integer,primary_key=True)
-    company_id = db.Column(db.String(10),db.ForeignKey('company.id',ondelete='CASCADE'))
+    company_id = db.Column(db.String(150),db.ForeignKey('company.id',ondelete='CASCADE'))
     company = db.relationship('company',backref=db.backref('portfolio_company',passive_deletes=True))
     quantity = db.Column(db.Integer)
     bid_price = db.Column(db.Numeric)
@@ -161,7 +161,7 @@ class portfolio(db.Model):
 class transactions(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     timestamp = db.Column(db.DateTime,default=datetime.datetime.now)
-    company_id = db.Column(db.String(10),db.ForeignKey('company.id',ondelete='CASCADE'))
+    company_id = db.Column(db.String(150),db.ForeignKey('company.id',ondelete='CASCADE'))
     company = db.relationship('company',backref=db.backref('trans_company',passive_deletes=True))
     #company = db.Column(db.String(20),db.ForeignKey('company.name',ondelete='CASCADE'))
     demat_ac = db.Column(db.BigInteger,db.ForeignKey('demat.account_no',ondelete='CASCADE'))

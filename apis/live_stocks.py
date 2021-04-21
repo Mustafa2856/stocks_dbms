@@ -9,8 +9,9 @@ import yfinance as yf
 import plotly.graph_objs as go
 
 #Interval required 1 minute
-data = yf.download(tickers='ANS', period='1d', interval='1m')
+data = yf.download(tickers='UBER', period='1d', interval='1m')
 print(data.empty)
+print(yf.Ticker('UBER').info)
 
 #declare figure
 fig = go.Figure()
@@ -42,4 +43,4 @@ fig.update_xaxes(
 )
 
 #Show
-fig.show()
+#fig.show()

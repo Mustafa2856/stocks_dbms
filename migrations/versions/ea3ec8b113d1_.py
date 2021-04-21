@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 22658681acd8
+Revision ID: ea3ec8b113d1
 Revises: 
-Create Date: 2021-04-08 22:47:07.207422
+Create Date: 2021-04-21 15:12:05.051418
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '22658681acd8'
+revision = 'ea3ec8b113d1'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -33,7 +33,7 @@ def upgrade():
     sa.UniqueConstraint('pan_no')
     )
     op.create_table('company',
-    sa.Column('id', sa.String(length=10), nullable=False),
+    sa.Column('id', sa.String(length=150), nullable=False),
     sa.Column('name', sa.String(length=200), nullable=True),
     sa.Column('sector', sa.String(length=100), nullable=True),
     sa.Column('year_low', sa.Numeric(), nullable=True),
@@ -61,7 +61,7 @@ def upgrade():
     )
     op.create_table('shares',
     sa.Column('share_id', sa.Integer(), nullable=False),
-    sa.Column('company_id', sa.String(length=10), nullable=True),
+    sa.Column('company_id', sa.String(length=150), nullable=True),
     sa.Column('prev_close', sa.Numeric(), nullable=True),
     sa.Column('open_price', sa.Numeric(), nullable=True),
     sa.Column('volume', sa.Integer(), nullable=True),
@@ -73,7 +73,7 @@ def upgrade():
     )
     op.create_table('portfolio',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('company_id', sa.String(length=10), nullable=True),
+    sa.Column('company_id', sa.String(length=150), nullable=True),
     sa.Column('quantity', sa.Integer(), nullable=True),
     sa.Column('bid_price', sa.Numeric(), nullable=True),
     sa.Column('demat_ac', sa.BigInteger(), nullable=True),
@@ -84,7 +84,7 @@ def upgrade():
     op.create_table('transactions',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('timestamp', sa.DateTime(), nullable=True),
-    sa.Column('company_id', sa.String(length=10), nullable=True),
+    sa.Column('company_id', sa.String(length=150), nullable=True),
     sa.Column('demat_ac', sa.BigInteger(), nullable=True),
     sa.Column('buy', sa.Boolean(), nullable=True),
     sa.Column('price', sa.Numeric(), nullable=True),

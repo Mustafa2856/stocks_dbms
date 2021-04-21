@@ -22,6 +22,7 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_PERMANENT'] = False
 app.config['SECRET_KEY'] = "secret key"
 Session(app)
+db.session.rollback()
 
 s_time = time.time()-60
 shrs_data = None
@@ -34,35 +35,30 @@ def get_shrs_yf(cmp,period='1d',interval='1m'):
    global shrs_data ,share_info,year_shr_data
    global s_time
    shrs_data = yf.download(tickers=cmp,period='1d',interval='1m')
-   share_info=yf.Ticker(cmp).info
+   #share_info=yf.Ticker(cmp).info
    s_time = time.time()
 
 def port_shrs_yf(cmp,period='1d',interval='1m',change_gl=True):
    comp = str(cmp).translate([None,'[],\''])
    global shrs_data ,share_info,year_shr_data
    global s_time
-   if s_time==None or time.time() - s_time > 60:
-      shar_data = yf.download(tickers=cmp,period='1d',interval='1m')
-      s_time = time.time()
-      if change_gl:
-         shrs_data = shar_data
-   else:
+   #if s_time==None or time.time() - s_time > 60:
+   shar_data = yf.download(tickers=cmp,period='1d',interval='1m')
+   s_time = time.time()
+   shrs_data = shar_data
+   """else:
       shar_data = shrs_data 
-      
+   """
    return shar_data
 
-def get_company_info(cmp,change_gl):
-   if change_gl:
-      global share_info
-      if share_info:
-         return
-   else:
-      share_info = {}
+def get_company_info(cmp,change_gl=False):
+   global share_info
    for c in cmp:
       share_info[c] = yf.Ticker(c).info
    return share_info
 
 from models import User, Bank_Details, demat, company, shares, portfolio, transactions
+
 comp = None
 cmp=None
 def updt_cmp():
@@ -122,8 +118,8 @@ def register():
 @app.route('/user_home',methods=['POST','GET'])
 def user_home():
    user = session.get('current_user',None)
-   dmt = session.get('current_demat',None)
-   trans = session.get('current_trans',None)
+   dmt = demat.get_ac(session['current_user'].username)
+   trans = transactions.get_trs(session['current_demat'].account_no)
    if user == None:
       flash('Login to Access Account Details')
       return redirect('/login')
@@ -140,7 +136,7 @@ def user_home():
       print(form)
       try:
          db.session.add(transactions(form.get('company_id'), dmt.account_no,bool(form.get('buy')),float(form.get('price')),int(form.get('quantity')),form.get('status')))
-         db.session.add(portfolio(form.get('company_id'),int(form.get('quantity')),float(form.get('price')),dmt.account_no))
+         #db.session.add(portfolio(form.get('company_id'),int(form.get('quantity')),float(form.get('price')),dmt.account_no))
          db.session.commit()
       except Exception as exp:
          print(exp)
@@ -178,20 +174,20 @@ def logout():
 @app.route('/portfolio',methods=['POST','GET'])
 def porfolio():
    user = session.get('current_user',None)
-   dmt = session.get('current_demat',None)
-   trans = session.get('current_trans',None)
+   dmt = demat.get_ac(session['current_user'].username)
+   trans = transactions.get_trs(session['current_demat'].account_no)
    if user == None:
       flash('Login to Accesss Potfolio')
       return redirect('/login')
    pft = portfolio.get_shares(dmt.account_no)
    port_shrs_yf(list(cmp.keys()))
-   
+   #print(shrs_data)
    return render_template('/portfolio.html',user=user,dmt=dmt,trans=trans,pft=pft,cmp=cmp,shrs=shrs_data)
 
 @app.route('/trade',methods=['POST','GET'])
 def trade():
    user = session.get('current_user',None)
-   dmt = session.get('current_demat',None)
+   dmt = demat.get_ac(session['current_user'].username)
    pft = portfolio.get_shares(dmt.account_no)
    if user == None:
       flash('Login to Access Trade Page')
@@ -204,7 +200,7 @@ def trade():
          if cmp.get(company_to_trade,None):
             global s_time
             if time.time() - s_time > 60 :
-               get_shrs_yf(company_to_trade)
+               port_shrs_yf(company_to_trade)
             if request.args.get('tp') == '1':
                return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=share_info,sell=0)
             else:
@@ -215,21 +211,23 @@ def trade():
                return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=share_info,max_lim=max_lim,sell=1)
          else:
             try:
-               dat = get_shrs_yf([company_to_trade,],period='1y',interval='1d',change_gl=False)
+               dat = port_shrs_yf([company_to_trade,],period='1y',interval='1d')
                if dat.empty:
                   print('Company not Found')
                else:
-                  shr_info = get_company_info(company_to_trade,False)
-                  print("check2"+shr_info)
+                  #shr_info = get_company_info([company_to_trade,])
+                  #print("check2"+shr_info)
+                  get_shrs_yf(company_to_trade)
                   db.session.add(company(company_to_trade,company_to_trade,'-',dat['High'].max(skipna=True),dat['Low'].min(skipna=True)))
                   db.session.commit()
                   updt_cmp()
-                  return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=shr_info)
+                  return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=share_info)
             except Exception as exp:
+               #get_shrs_yf(list(cmp.keys()))
                print(exp)
    if share_info == None:
-      get_shrs_yf(list(cmp.keys()))
-   return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=share_info['AAPL'])
+      port_shrs_yf(list(cmp.keys()))
+   return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=share_info)
 
 
 @app.route('/transactions',methods=['POST','GET'])
