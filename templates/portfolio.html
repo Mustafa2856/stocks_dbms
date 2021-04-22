@@ -117,6 +117,7 @@
                 <div id="company_name">
                     <b> {{cmp[port.company_id].name}}</b>
                 </div>
+                <button onClick="location.href='/trade?tp=0&cmp='+'{{port.company_id}}';">Sell</button>
                 <div id="current_investment">
                     &nbsp;   &nbsp; ${{(shrs['Open'][port.company_id][-1]|float) * port.quantity}}
                 </div>
