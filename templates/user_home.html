@@ -3,13 +3,12 @@
 <style>
     body {
       margin:0;
-  background-color: rgb(0, 20, 110);
-  color:rgb(255, 255, 255)
 }
 
 .topnav {
   overflow: hidden;
-  background-color: rgb(10, 28, 46);
+  background-color: rgb(0, 2, 3);
+  color:#dcdcdc;
 }
 
 .topnav a {
@@ -57,6 +56,19 @@
     text-align: left;
   }
 }
+#head{
+  
+  padding:auto;
+  margin-left:30%;
+
+}
+table{
+  margin:30px;
+  padding:10px;
+}
+table tr{
+  width:100px;
+}
 </style>
 <body>
     <div class="topnav" id="myTopnav">
@@ -84,7 +96,8 @@
     }
     </script>
 <section id=Main>
-   <div id=head><h2>Account Summary</h2></div>
+   <div id=head>
+     <h2>Account Summary</h2></div>
    <table style="width:80%;padding:20px;">
      <tr>
        <td>Username: </td>
@@ -100,15 +113,15 @@
     </tr>
     <tr>
       <td>Funds Available (Cash): </td>
-      <td>{{dmt.Funds_Avail}}</td>
+      <td>₹{{dmt.Funds_Avail}}</td>
     </tr>
     <tr>
       <td>Funds Invested (Current Stocks Value): </td>
-      <td>{{dmt.Funds_Invested}}</td>
+      <td>₹{{dmt.Funds_Invested}}</td>
     </tr>
     <tr>
       <td>Total Funds: </td>
-      <td>{{dmt.Funds_Avail + dmt.Funds_Invested + dmt.Funds_Blocked}}</td>
+      <td>₹{{dmt.Funds_Avail + dmt.Funds_Invested + dmt.Funds_Blocked}}</td>
     </tr>
     <tr>
       <td>Total Transactions: </td>

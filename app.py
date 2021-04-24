@@ -11,6 +11,7 @@ import time
 import plotly.graph_objs as go
 import datetime
 from sqlalchemy import create_engine
+import psycopg2
 app = Flask(__name__)
 
 
@@ -35,7 +36,7 @@ def get_shrs_yf(cmp,period='1d',interval='1m'):
    global shrs_data ,share_info,year_shr_data
    global s_time
    shrs_data = yf.download(tickers=cmp,period='1d',interval='1m')
-   #share_info=yf.Ticker(cmp).info
+   share_info=yf.Ticker(cmp).info
    s_time = time.time()
 
 def port_shrs_yf(cmp,period='1d',interval='1m',change_gl=True):
@@ -245,5 +246,29 @@ def transaction():
       rs = con.execute('SELECT * FROM transactions where demat_ac='+str(dmt.account_no))
       for row in rs:
          print(row) """
+   """ try:
+      ps_connection = psycopg2.connect('postgresql://postgres:neel@localhost:5432/stocks_dbms')
+
+      cursor = ps_connection.cursor()
+
+      # call stored procedure
+      cursor.callproc('TRANSACTION_FILTER', [1,str(dmt.account_no),'' ])
+      result = cursor.fetchall()
+      print(result)
+      print("neel")
+      for row in result:
+         print("Id = ", row[0], )
+         print("Name = ", row[1])
+         print("Designation  = ", row[2])
+   except (Exception, psycopg2.DatabaseError) as error:
+      print("Error while connecting to PostgreSQL", error)
+   finally:
+      # closing database connection.
+      if ps_connection:
+         cursor.close()
+         ps_connection.close()
+         print("PostgreSQL connection is closed") """
+
+
    transaction = transactions.get_trs(dmt.account_no)
    return render_template('/pending.html',user=user,dmt=dmt,trans=trans,transaction=transaction)

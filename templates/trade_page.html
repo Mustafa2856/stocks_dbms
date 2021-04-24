@@ -3,13 +3,13 @@
 <style>
   body {
     margin: 0;
-    background-color: rgb(0, 20, 110);
-    color:rgb(255, 255, 255)
+    
   }
   
   .topnav {
     overflow: hidden;
-    background-color: rgb(10, 28, 46);
+    background-color: rgb(0, 2, 3);
+      color:#dcdcdc;
   }
   
   .topnav a {
@@ -99,7 +99,7 @@
     <a href="/login">Login</a>
     <a href="/portfolio">Portfolio</a>
     <a href="/transactions">Transactions</a>
-    <a href="/company_details">Company Details</a>
+    <a href="/company_details" class="active">Company Details</a>
     <a href="/user_home">Account Summary</a>
     <a href="/personal_details">Personal Details</a>
     <a href="/logout">Logout</a>
@@ -128,86 +128,36 @@
   }
   </script>
 <style>
-    body {
-      margin: 0;
-      background-color: rgb(0, 20, 110);
-      color:rgb(255, 255, 255);
-      
-    }
+    
     *{
         font-size: large;
     }
-    .topnav {
-      overflow: hidden;
-      background-color: rgb(10, 28, 46);
-    }
     
-    .topnav a {
-      float: left;
-      display: block;
-      color: #f2f2f2;
-      text-align: center;
-      padding: 14px 16px;
-      text-decoration: none;
-      font-size: 17px;
-    }
     
-    .topnav a:hover {
-      background-color: #ddd;
-      color: black;
-    }
-    
-    .topnav a.active {
-      background-color: #f11313;
-      color: white;
-    }
-    
-    .topnav .icon {
-      display: none;
-    }
-    
-    @media screen and (max-width: 600px) {
-      .topnav a:not(:first-child) {display: none;}
-      .topnav a.icon {
-        float: right;
-        display: block;
-      }
-    }
-    
-    @media screen and (max-width: 600px) {
-      .topnav.responsive {position: relative;}
-      .topnav.responsive .icon {
-        position: absolute;
-        right: 0;
-        top: 0;
-      }
-      .topnav.responsive a {
-        float: none;
-        display: block;
-        text-align: left;
-      }
-    }
     .trade{
         text-align: center;
         display: block;
         padding: 10px 10%;
-        border: 3px solid rgb(24, 228, 218);
+        border: 3px solid green;
         margin-left: 15%;margin-right: 15%;
+        margin-top:20px;
+        border-radius:15px;
     }
 table{
     width:100%;
-    
+    margin-top:20px;
 }
 
 
 button {
-  background-color: #0b2cec;
+  background-color: green;
   color: rgb(255, 255, 255);
   padding: 14px 20px;
   margin: 8px 0;
   border: none;
   cursor: pointer;
   width: 60%;
+  border-radius:10px;
 }
 
 button:hover {
@@ -215,7 +165,7 @@ button:hover {
 }
 
 .cancel  {
-  background-color: #ec0b29;
+  background-color: red;
   color: rgb(255, 255, 255);
   padding: 14px 20px;
   margin: 8px 0;
@@ -235,7 +185,7 @@ button:hover {
         
         var cash = document.getElementById("cash");
         
-        cash.innerHTML= (quantity*current_price);
+        cash.innerHTML='₹'+ (quantity*current_price);
        
     }
 
@@ -245,7 +195,7 @@ button:hover {
     
     
 </script>
- <button id="bs" onClick="return buy_sell()">Buy</button> 
+ 
     <div class="trade">
         <h1>Place Order</h1>
         <table>
@@ -260,7 +210,7 @@ button:hover {
             </tr>
             <tr>
                 <td>Market Price:</td>
-                <td>${{share_info['regularMarketPrice']}}</td>
+                <td>₹{{share_info['regularMarketPrice']}}</td>
                  
             </tr>
             <tr>
@@ -285,7 +235,7 @@ button:hover {
             </tr>
             <tr>
                 <td>Available Funds: </td>
-                <td>{{dmt.Funds_Avail}} </td>
+                <td>₹{{dmt.Funds_Avail}} </td>
                  
             </tr>
             <tr>

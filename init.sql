@@ -41,3 +41,22 @@ $$ LANGUAGE PLPGSQL;
 CREATE TRIGGER UPDATE_TRANSACTION_PORTFOLIO
 	BEFORE INSERT ON TRANSACTIONS
 	FOR EACH ROW EXECUTE PROCEDURE transaction_check();
+
+
+CREATE OR REPLACE FUNCTION TRANSACTION_FILTER(opt IN int,dmt IN int,condition IN VARCHAR) 
+RETURNS REFCURSOR AS 
+$$ 
+declare 
+trans_filter  REFCURSOR;
+BEGIN
+	case opt
+	when 1 then open trans_filter FOR SELECT  id ,timestamp , company_id ,demat_ac , buy , price  , quantity , status FROM TRANSACTIONS WHERE demat_ac = dmt and buy = true;
+	when 2 then open trans_filter FOR SELECT * FROM TRANSACTIONS WHERE demat_ac = dmt and buy = false;
+	when 3 then open trans_filter FOR SELECT * FROM TRANSACTIONS WHERE demat_ac = dmt and company_id=condition ;
+	end case;
+
+	return trans_filter;
+end; $$ 
+LANGUAGE PLPGSQL;
+
+	

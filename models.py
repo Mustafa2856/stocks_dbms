@@ -75,7 +75,7 @@ class demat(db.Model):
 
     def __init__(self,User_id):
         self.User_id = User_id
-        self.Funds_Avail = 50000
+        self.Funds_Avail = 500000
         self.Funds_Blocked = 0
         self.Funds_Invested = 0
     

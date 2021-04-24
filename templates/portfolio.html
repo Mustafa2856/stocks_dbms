@@ -2,21 +2,19 @@
 {% block body %}
 <style>
     
-   .p{ 
-       display:inline-flex;
-       margin: 5px;
-   }
+   
    body{
       align-items: center;
       margin:0;
-      background-color: rgb(0, 20, 110);
-      color:rgb(255, 255, 255)
+     
     }
     
-    .topnav {
-      overflow: hidden;
-      background-color: rgb(10, 28, 46);
-    }
+  
+  .topnav {
+    overflow: hidden;
+    background-color: rgb(0, 2, 3);
+      color:#dcdcdc;
+  }
     
     .topnav a {
       float: left;
@@ -63,8 +61,17 @@
         text-align: left;
       }
     }
-   
-
+   header{
+     margin:10%;
+     margin-top:10px;
+     padding:20px;
+   }
+   table{
+     width:100%;
+   }
+   tr{
+     width:100%;
+   }
 
 </style>
 <body>
@@ -93,6 +100,7 @@
   </div>
   {% endif %}
   <script>
+    
   function myFunction() {
     var x = document.getElementById("myTopnav");
     if (x.className === "topnav") {
@@ -101,53 +109,115 @@
       x.className = "topnav";
     }
   }
+  var gain=0;
+  var invest=0;
   </script>
-  
+  <header>
     <h1>Portfolio</h1>
     <div>
         DEMAT A/C No: {{dmt.account_no}}<br>
         Total Investment: {{dmt.Funds_Invested}}<br>
-        Current Investment:<br>
-        Overall Gain/Loss: <br>
+        Current Investment:<div id="total_investment" style="display:inline"></div><br>
+        Overall Gain/Loss: <div id="total_gain" style="display:inline"></div><br>
+    </div>
+    <div>
+      Apply Filter: 
+      <input type="text" value=><button>Company Search</button>
     </div>
     <hr>
+
+    <table>
         {% for port in pft %}
-        <div id="portfolio" >
-            <div class="p">
-                <div id="company_name">
+        
+        <tr>
+            <th> 
+              {% if shrs["Open"][port.company_id][-1]|float < port.bid_price|float %}
+                 <div id="company_name" style="background-color:red">
                     <b> {{cmp[port.company_id].name}}</b>
                 </div>
-                <div id="current_investment">
-                    &nbsp;   &nbsp; ${{(shrs['Open'][port.company_id][-1]|float) * port.quantity}}
+                {% else %}
+                <div id="company_name" style="background-color:green">
+                  <b> {{cmp[port.company_id].name}}</b>
+              </div>
+                {% endif %}
+              </th>
+              <th>
+                {% if shrs["Open"][port.company_id][-1]|float < port.bid_price|float %}
+                <div id="current_investment" style="color:red">
+                  ₹{{'%0.2f'%((shrs['Open'][port.company_id][-1]|float) * port.quantity)|float}}
                 </div>
-            </div>
-            <br>
-            <div class="p">
+                {% else %}
+                <div id="current_investment" style="color:green">
+                  ₹{{'%0.2f'%((shrs['Open'][port.company_id][-1]|float) * port.quantity)|float}}
+                </div>
+                {% endif %}
+              </th>
+            
+          </tr>  
+            <tr>
+              <td>
                 <div id="current_price">
-                    Current Price : ${{shrs['Open'][port.company_id][-1]}}
+                    Current Price : ₹{{'%0.2f'%(shrs['Open'][port.company_id][-1])|float}}
                 </div>
+              </td>
+              <td>
                 <div id="buy_price">
-                    &nbsp;   &nbsp;Buy price : ${{port.bid_price}}
+                    &nbsp;   &nbsp;Buy price : ₹{{'%0.2f'%(port.bid_price)|float}}
                 </div>
-            </div>
-        <br>
-            <div class="p">
+              </td>  
+            </tr>
+           
+        
+            <tr>
+              <td>
                 <div id="Quantity">
                     Quantity : {{port.quantity}}
                 </div>
+              </td>
+              <td>
                 <div id="investment">
-                    &nbsp;   &nbsp;Investment : ${{port.bid_price * port.quantity}}
+                    &nbsp;   &nbsp;Investment : ₹{{'%0.2f'%(port.bid_price * port.quantity)|float}}
                 </div>
-            </div>
-            <br>
-            <div id="profit_loss">
+             </td>
+            </tr>
+            <tr>
+              <td>
+            
                 <!-- ( buy_price < current_price ? Profit : Loss ) -->
-               
-                ${{((shrs['Open'][port.company_id][-1] * port.quantity)|float - (port.bid_price * port.quantity)|float)|abs}}
-            </div>
-            <hr>
-        </div>
+               {% if port.bid_price < shrs['Open'][port.company_id][-1] %}
+               <div id="profit_loss" style="color:green">
+                Profit:₹{{'%0.2f'%((shrs['Open'][port.company_id][-1] * port.quantity)|float - (port.bid_price * port.quantity)|float)|abs}}
+               </div>
+                {% else %}
+                <div id="profit_loss" style="color:red">
+                Loss:₹{{'%0.2f'%((shrs['Open'][port.company_id][-1] * port.quantity)|float - (port.bid_price * port.quantity)|float)|abs}}
+               </div>
+                {% endif %}
+                
+            
+          </td>
+          </tr>
+          <script>
+            gain+=parseInt("{{'%0.2f'%((shrs['Open'][port.company_id][-1] * port.quantity)|float - (port.bid_price * port.quantity)|float)}}");
+            invest+=parseInt("{{'%0.2f'%((shrs['Open'][port.company_id][-1]|float) * port.quantity|float)}}");
+          </script>
         {% endfor %}
+      </table>
+      <script>
+      console.log(gain)
+      console.log(invest)
+      document.getElementById("total_gain").innerHTML=gain;
+      document.getElementById("total_investment").innerHTML=invest;
+      if(gain<0){
+        document.getElementById("total_gain").style.color="red";
+      document.getElementById("total_investment").style.color="red";
+      }
+      else{
+        document.getElementById("total_gain").style.color="green";
+      document.getElementById("total_investment").style.color="green";
+      }
+      </script>
+      </header>
 </body>
 
 {% endblock %}

@@ -3,13 +3,13 @@
 <style>
     body {
       margin: 0;
-      background-color: rgb(0, 20, 110);
-      color:rgb(255, 255, 255)
+     
     }
     
     .topnav {
       overflow: hidden;
-      background-color: rgb(10, 28, 46);
+      background-color: rgb(0, 2, 3);
+      color:#dcdcdc;
     }
     
     .topnav a {
@@ -137,9 +137,7 @@
         align-items: center;
     }
     
-    #Search{
-        width: 20%;
-    }
+    
     #Company_Details::before {
         content: "";
         position: absolute;
@@ -195,25 +193,23 @@
         background-color: lightgoldenrodyellow;
     }
     
-    .Company_Heading a {
-        color: white;
-        font-size: 3rem;
+    .Company_Heading  {
         display: block;
-        width: 80%;
-        background-color: gray;
-        border-radius: 30px;
-        padding: 10px 10px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
     }
     
-    .Company_Heading a:hover {
+    /* .Company_Heading a:hover {
         color: white;
         font-size: 3rem;
         display: block;
-        width: 80%;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
         background-color: lightgray;
         border-radius: 30px;
-        padding: 10px 10px;
-    }
+    } */
     
     .Companies {
         cursor: pointer;
@@ -227,7 +223,7 @@
     table{
         border-collapse: separate;
         border-spacing: 15px 15px;
-        color: #2f4f4f;
+        
         
     }
     
@@ -247,13 +243,24 @@
     }
     button{
         width:100%;  
-        font-size: 30px;
-        background-color:#dcdcdc;
-        border-radius: 30px;  
+        font-size: large;
+        border-radius: 20px; 
+    }
+    #Search{
+        width: 12%;
+        font-size: medium;
+        border-radius: 8px;
+        padding: 4px;
+        margin: 10px;
+        background-color:#f11313 ;
+    }
+    #searchbar{
+      width:20%;
+      border-radius: 10px;
     }
     </style>   
 <center>
-<input type="search" name="cmps" list="list1">
+<input type="search" name="cmps" list="list1" id="searchbar">
 <datalist id="list1">
     {% for company in cmp_list %}
         <option value="{{company}}"></option>
@@ -265,52 +272,54 @@
     {% if flag == 0 %}
     {% else %}
     <section id="Rel" class="Company_Details">
-        <center>
-            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-      google.charts.load('current', {'packages':['corechart']});
-      google.charts.setOnLoadCallback(drawChart);
-
-      function drawChart() {
-          var dat = [
-          ['Time', 'Price'],
-          {% for i in range(shrs_curr['Volume'].count()) %}
-          ['{{shrs_curr.index.to_list()[i]}}',{{shrs_curr['Open'][i]}}],
-          {% endfor %}
-        ];
-        var data = google.visualization.arrayToDataTable(dat);
-
-        var options = {
-          title: 'Company Performance',
-          curveType: 'function',
-          legend: { position: 'bottom' }
-        };
-
-        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-
-        chart.draw(data, options);
-      }
-    </script>
-    <div id="curve_chart" style="width: 900px; height: 500px"></div>
+       <center>
             <div class="Company_Heading">
                 <div>
-                    <h1>{{shrs['shortName']}}  ${{shrs['regularMarketPrice']}} 
+                    <h1>{{shrs['shortName']}}  ₹{{shrs['regularMarketPrice']}} 
                         <label id="pc"></label></h1>
                          
                 </div>
              </div>
-
+     
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+          google.charts.load('current', {'packages':['corechart']});
+          google.charts.setOnLoadCallback(drawChart);
+      
+          function drawChart() {
+            var color=change<0 ? 'red' : 'green'
+      
+              var dat = [
+              ['Time', 'Price',{role: 'style'}],
+              {% for i in range(shrs_curr['Volume'].count()) %}
+              ['{{shrs_curr.index.to_list()[i]}}',{{shrs_curr['Close'][i]}},color],
+              {% endfor %}
+            ];
+            var data = google.visualization.arrayToDataTable(dat);
+      
+            var options = {
+              title: 'Company Performance',
+              curveType: 'function',
+              legend: { position: 'bottom' }
+            };
+      
+            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+      
+            chart.draw(data, options);
+          }
+        </script>
+        <div id="curve_chart" style="width: 900px; height: 500px"></div>
             <table  style="width: 70%; height: 50%;">
                 
 
                 <tr>
-                    <td>High Price: ${{shrs['regularMarketDayHigh']}}</td>
-                    <td>Low Price: ${{shrs['regularMarketDayLow']}}</td>
+                    <td>High Price: ₹{{shrs['regularMarketDayHigh']}}</td>
+                    <td>Low Price: ₹{{shrs['regularMarketDayLow']}}</td>
                 </tr>
 
                 <tr>
-                    <td>Open Price: ${{shrs['regularMarketOpen']}}</td>
-                    <td>Volume: ${{shrs['volume']   }}</td>
+                    <td>Open Price: ₹{{shrs['regularMarketOpen']}}</td>
+                    <td>Volume: ₹{{shrs['volume']   }}</td>
                 </tr>
 
                 <tr>
@@ -329,13 +338,16 @@
                 </tr>
 
                 <tr>
-                    <td><button onClick="return trade(1)">Buy</button></td>
-                    <td><button onClick="return trade(0)">Sell</button></td>
+                    <td><button style="background-color: green;" onClick="return trade(1)">Buy</button></td>
+                    <td><button style="background-color: red;" onClick="return trade(0)">Sell</button></td>
                 </tr>
             </table>
-        </center>
-    </section>
+       
 
+    
+    
+      </center>
+    </section>
     {% endif %}
 </body>
 <script>
@@ -344,7 +356,8 @@
     percentage=percentage.toFixed(2);
     
     if(percentage<0){
-
+      document.getElementById("pc").innerHTML=" "+change+" ( "+percentage+" %)";
+        document.getElementById("pc").style.color="red";
     }else{
         document.getElementById("pc").innerHTML="+"+change+" ( +"+percentage+" %)";
         document.getElementById("pc").style.color="green";

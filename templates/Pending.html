@@ -7,16 +7,16 @@
     <link rel="stylesheet" href="transactions.css" />
 </head>
 <style>
-    body {
-      margin: 0;
-      background-color: rgb(0, 20, 110);
-      color:rgb(255, 255, 255)
-    }
+  body {
+    margin: 0;
     
-    .topnav {
-      overflow: hidden;
-      background-color: rgb(10, 28, 46);
-    }
+  }
+  
+  .topnav {
+    overflow: hidden;
+    background-color: rgb(0, 2, 3);
+      color:#dcdcdc;
+  }
     
     .topnav a {
       float: left;
@@ -67,9 +67,8 @@
     form {border: 3px solid rgb(24, 228, 218);width:70%;margin-left: 15%;margin-right: 15%;}
     
     input[type=text], input[type=password] {
-      width: 90%;
-      padding: 12px 20px;
-      margin: 8px 0;
+      
+      margin-left:5px;
       display: inline-block;
       border: 1px solid #ccc;
       box-sizing: border-box;
@@ -78,11 +77,10 @@
     button {
       background-color: #0b2cec;
       color: rgb(255, 255, 255);
-      padding: 14px 20px;
-      margin: 8px 0;
-      border: none;
+      margin-left:5px;
+      border-radius: 5px;
       cursor: pointer;
-      width: 95%;
+      
     }
     
     button:hover {
@@ -133,7 +131,11 @@
       }
     }
     </script>
-
+    <div>
+      Apply Filter: <input type="radio" name="filter"> Buyings
+      <input type="radio" name="filter"> Sellings
+      <input type="text" value=><button>Company Search</button>
+    </div>
     {% for tr in transaction %}
     <div style=" align-self: center; display: grid;">
         <table id="t1" style="width: 100%;">
@@ -143,11 +145,11 @@
             </tr>
             <tr>
                 <td id="Par">Transaction Date : {{tr.timestamp}}</td>
-                <td id="Par">Price Per Share: {{tr.price}}</td>
+                <td id="Par">Price Per Share: ₹{{tr.price}}</td>
             </tr>
             <tr>
                 <td id="Par">Quantity : {{tr.quantity}}</td>
-                <td id="Par">Transaction Total : {{tr.quantity * tr.price}}</td>
+                <td id="Par">Transaction Total : ₹{{tr.quantity * tr.price}}</td>
             </tr>
             <tr>
                 <td id="Par">Transaction type : {% if tr.buy==1 %} Buy {% else %} Sell {% endif %}</td>
