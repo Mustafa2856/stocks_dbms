@@ -186,5 +186,5 @@ class transactions(db.Model):
 
     @classmethod
     def get_trs(cls,account_no):
-        dmt = cls.query.filter_by(demat_ac=account_no).all()
+        dmt = cls.query.filter_by(demat_ac=account_no).order_by(transactions.timestamp.desc()).all()
         return dmt

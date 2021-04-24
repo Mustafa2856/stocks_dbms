@@ -185,7 +185,7 @@
               <td>
             
                 <!-- ( buy_price < current_price ? Profit : Loss ) -->
-               {% if port.bid_price < shrs['Open'][port.company_id][-1] %}
+               {% if port.bid_price|float < shrs['Open'][port.company_id][-1]|float %}
                <div id="profit_loss" style="color:green">
                 Profit:₹{{'%0.2f'%((shrs['Open'][port.company_id][-1] * port.quantity)|float - (port.bid_price * port.quantity)|float)|abs}}
                </div>

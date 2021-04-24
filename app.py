@@ -12,8 +12,7 @@ import plotly.graph_objs as go
 import datetime
 from sqlalchemy import create_engine
 import psycopg2
-app = Flask(__name__)
-
+app = Flask(__name__,static_folder="",static_url_path="/"+os.getcwd())
 
 s = os.environ.get("DATABASE_URL")
 s = 'postgresql+psycopg2:/' + s[s.find('/')+1:]
@@ -270,7 +269,11 @@ def transaction():
          cursor.close()
          ps_connection.close()
          print("PostgreSQL connection is closed") """
-
-
-   transaction = transactions.get_trs(dmt.account_no)
+   if request.method == 'GET':
+      if request.args.get('sb') == '1':
+         transaction = transactions.query.filter_by(buy=True).order_by(transactions.timestamp.desc()).all()
+      elif request.args.get('sb') == '2':
+         transaction = transactions.query.filter_by(buy=False).order_by(transactions.timestamp.desc()).all()
+      else:
+         transaction = transactions.get_trs(dmt.account_no)
    return render_template('/pending.html',user=user,dmt=dmt,trans=trans,transaction=transaction)

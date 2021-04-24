@@ -132,8 +132,9 @@
     }
     </script>
     <div>
-      Apply Filter: <input type="radio" name="filter"> Buyings
-      <input type="radio" name="filter"> Sellings
+      Apply Filter: <input type="radio" name="filter" onClick="window.location='/transactions?sb=1'"> Buyings
+      <input type="radio" name="filter" onClick="window.location='/transactions?sb=2'"> Sellings
+      <input type="radio" name="filter" onClick="window.location='/transactions'"> All
       <input type="text" value=><button>Company Search</button>
     </div>
     {% for tr in transaction %}
