@@ -199,6 +199,7 @@ def trade():
       max_lim = 0
       if company_to_trade:
          if cmp.get(company_to_trade,None):
+            print(company_to_trade)
             global s_time
             if time.time() - s_time > 60 :
                port_shrs_yf(company_to_trade)
@@ -209,6 +210,7 @@ def trade():
                   if shr.company_id == company_to_trade:
                      max_lim = shr.quantity
                      break
+               get_shrs_yf(company_to_trade)
                return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=share_info,max_lim=max_lim,sell=1)
          else:
             try:
