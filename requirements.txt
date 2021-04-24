@@ -25,7 +25,7 @@ MarkupSafe==1.1.1
 mccabe==0.6.1
 multitasking==0.0.9
 numpy
-pandas==1.2.3
+pandas
 plotly==4.14.3
 psutil==5.8.0
 psycopg2==2.8.6
