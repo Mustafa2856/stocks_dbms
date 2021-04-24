@@ -67,8 +67,7 @@ def updt_cmp():
    cmp = {}
    for i in comp:
       cmp[i.id] = i
-if __name__ == '__main__':
-   updt_cmp()
+updt_cmp()
 
 @app.route('/',methods=['POST','GET'])
 def home():
