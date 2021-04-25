@@ -162,8 +162,8 @@ class transactions(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     timestamp = db.Column(db.DateTime,default=datetime.datetime.now)
     company_id = db.Column(db.String(150),db.ForeignKey('company.id',ondelete='CASCADE'))
-    company = db.relationship('company',backref=db.backref('trans_company',passive_deletes=True))
-    #company = db.Column(db.String(20),db.ForeignKey('company.name',ondelete='CASCADE'))
+    #company = db.relationship('company',backref=db.backref('trans_company',passive_deletes=True))
+    company_name = db.Column(db.String(20))
     demat_ac = db.Column(db.BigInteger,db.ForeignKey('demat.account_no',ondelete='CASCADE'))
     demat = db.relationship('demat',backref=db.backref('trans_demat',passive_deletes=True))
     buy = db.Column(db.Boolean)
@@ -171,7 +171,7 @@ class transactions(db.Model):
     quantity = db.Column(db.Integer)
     status = db.Column(db.Integer)
 
-    def __init__(self,company_id,demat_ac,buy,price,quantity,status = 0):
+    def __init__(self,company_id,company_name,demat_ac,buy,price,quantity,status = 0):
         #self.timestamp = timestamp
         self.company_id = company_id
         self.demat_ac = demat_ac
@@ -179,7 +179,7 @@ class transactions(db.Model):
         self.price = price
         self.quantity = quantity
         self.status = status
-        #self.company=company
+        self.company_name=company_name
 
     def __repr__(self):
         return '<trans %r>' % self.id

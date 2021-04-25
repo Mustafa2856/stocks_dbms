@@ -10,6 +10,12 @@ if new.buy = true then
 	if (dmt."Funds_Avail") < (new.price* new.quantity) then
 		RAISE EXCEPTION 'Not Enough Balance to buy';
 	end if;
+	if(new.price<0) then
+		RAISE EXCEPTION 'InValid Price';
+	End if;
+	if( new.quantity <=0 )then
+		RAISE EXCEPTION 'INVALID QUANTITY';
+	end if;
 		if port is not null then
 			update portfolio set bid_price=(( (port.bid_price*port.quantity)+(new.price * new.quantity))/(port.quantity + new.quantity)) where company_id=new.company_id and demat_ac=new.demat_ac;
 			update portfolio set quantity=(port.quantity + new.quantity) where company_id=new.company_id and demat_ac=new.demat_ac; 
@@ -30,6 +36,7 @@ else
 			end if;
 			update demat set "Funds_Avail"="Funds_Avail"+(new.price* new.quantity) where account_no=new.demat_ac;
 			update demat set "Funds_Invested"="Funds_Invested"-(new.price* new.quantity) where account_no=new.demat_ac;
+			update demat set "Funds_Invested"=0 where "Funds_Invested"<0;
 			return new;
 		end if;
 	RAISE EXCEPTION 'Shares not found';

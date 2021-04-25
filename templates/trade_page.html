@@ -305,6 +305,10 @@ var trade_type=getParams(window.location.href)['trade_type'];
         alert("Please enter quantity!!!")
         return false;
       }
+      if(quantity<0){
+        alert("Please Enter Positive Quantity");
+        return false;
+      }
         if('{{sell}}'==1){
           if('{{max_lim}}'==0){
             alert("You Don't have Any Shares Available to Sell!!")

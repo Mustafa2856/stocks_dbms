@@ -135,7 +135,7 @@ def user_home():
       form=request.args
       print(form)
       try:
-         db.session.add(transactions(form.get('company_id'), dmt.account_no,bool(form.get('buy')),float(form.get('price')),int(form.get('quantity')),form.get('status')))
+         db.session.add(transactions(form.get('company_id'),form.get('company'), dmt.account_no,bool(form.get('buy')),float(form.get('price')),int(form.get('quantity')),form.get('status')))
          #db.session.add(portfolio(form.get('company_id'),int(form.get('quantity')),float(form.get('price')),dmt.account_no))
          db.session.commit()
       except Exception as exp:
@@ -248,9 +248,7 @@ def transaction():
       for row in rs:
          print(row) """
    """ try:
-      ps_connection = psycopg2.connect('postgresql://postgres:neel@localhost:5432/stocks_dbms')
-
-      cursor = ps_connection.cursor()
+       cursor = db.cursor()
 
       # call stored procedure
       cursor.callproc('TRANSACTION_FILTER', [1,str(dmt.account_no),'' ])
@@ -268,7 +266,7 @@ def transaction():
       if ps_connection:
          cursor.close()
          ps_connection.close()
-         print("PostgreSQL connection is closed") """
+         print("PostgreSQL connection is closed")  """
    if request.method == 'GET':
       if request.args.get('sb') == '1':
          transaction = transactions.query.filter_by(buy=True).order_by(transactions.timestamp.desc()).all()

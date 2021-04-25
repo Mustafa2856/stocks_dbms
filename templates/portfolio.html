@@ -131,7 +131,7 @@
         
         <tr>
             <th> 
-              {% if shrs["Open"][port.company_id][-1]|float < port.bid_price|float %}
+              {% if shrs["Close"][port.company_id][-1]|float < port.bid_price|float %}
                  <div id="company_name" style="background-color:red">
                     <b> {{cmp[port.company_id].name}}</b>
                 </div>
@@ -143,13 +143,13 @@
                 {% endif %}
               </th>
               <th>
-                {% if shrs["Open"][port.company_id][-1]|float < port.bid_price|float %}
+                {% if shrs["Close"][port.company_id][-1]|float < port.bid_price|float %}
                 <div id="current_investment" style="color:red">
-                  ₹{{'%0.2f'%((shrs['Open'][port.company_id][-1]|float) * port.quantity)|float}}
+                  ₹{{'%0.2f'%((shrs["Close"][port.company_id][-1]|float) * port.quantity)|float}}
                 </div>
                 {% else %}
                 <div id="current_investment" style="color:green">
-                  ₹{{'%0.2f'%((shrs['Open'][port.company_id][-1]|float) * port.quantity)|float}}
+                  ₹{{'%0.2f'%((shrs["Close"][port.company_id][-1]|float) * port.quantity)|float}}
                 
                 {% endif %}
               </th>
@@ -158,7 +158,7 @@
             <tr>
               <td>
                 <div id="current_price">
-                    Current Price : ₹{{'%0.2f'%(shrs['Open'][port.company_id][-1])|float}}
+                    Current Price : ₹{{'%0.2f'%(shrs["Close"][port.company_id][-1])|float}}
                 </div>
               </td>
               <td>
@@ -185,13 +185,13 @@
               <td>
             
                 <!-- ( buy_price < current_price ? Profit : Loss ) -->
-               {% if port.bid_price|float < shrs['Open'][port.company_id][-1]|float %}
+               {% if port.bid_price|float < shrs["Close"][port.company_id][-1]|float %}
                <div id="profit_loss" style="color:green">
-                Profit:₹{{'%0.2f'%((shrs['Open'][port.company_id][-1] * port.quantity)|float - (port.bid_price * port.quantity)|float)|abs}}
+                Profit:₹{{'%0.2f'%((shrs["Close"][port.company_id][-1] * port.quantity)|float - (port.bid_price * port.quantity)|float)|abs}}
                </div>
                 {% else %}
                 <div id="profit_loss" style="color:red">
-                Loss:₹{{'%0.2f'%((shrs['Open'][port.company_id][-1] * port.quantity)|float - (port.bid_price * port.quantity)|float)|abs}}
+                Loss:₹{{'%0.2f'%((shrs["Close"][port.company_id][-1] * port.quantity)|float - (port.bid_price * port.quantity)|float)|abs}}
                </div>
                 {% endif %}
                 
@@ -202,8 +202,8 @@
           </td>
           </tr>
           <script>
-            gain+=parseInt("{{'%0.2f'%((shrs['Open'][port.company_id][-1] * port.quantity)|float - (port.bid_price * port.quantity)|float)}}");
-            invest+=parseInt("{{'%0.2f'%((shrs['Open'][port.company_id][-1]|float) * port.quantity|float)}}");
+            gain+=parseInt("{{'%0.2f'%((shrs['Close'][port.company_id][-1] * port.quantity)|float - (port.bid_price * port.quantity)|float)}}");
+            invest+=parseInt("{{'%0.2f'%((shrs['Close'][port.company_id][-1]|float) * port.quantity|float)}}");
           </script>
         {% endfor %}
       </table>
