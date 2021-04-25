@@ -274,4 +274,4 @@ def transaction():
          transaction = transactions.query.filter_by(buy=False).order_by(transactions.timestamp.desc()).all()
       else:
          transaction = transactions.get_trs(dmt.account_no)
-   return render_template('/Pending.html',user=user,dmt=dmt,trans=trans,transaction=transaction)
+   return render_template('/Pending.html',user=user,dmt=dmt,trans=trans,transaction=transaction,cmp=cmp)
