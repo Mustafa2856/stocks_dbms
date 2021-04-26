@@ -6,6 +6,16 @@
       font-family: 'Open Sans',sans-serif;
       
     }
+
+    section table,th,td{
+      border: 1px solid black;
+      text-align: center;
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      
+    }
+    th,td{
+      padding:15px;
+    }
     
     .topnav {
       overflow: hidden;
@@ -101,34 +111,34 @@
     }
     </script>
     <section id=user_details>
-        <div id=head><h2>Personal Details</h2></div>
-   <table style="width:80%;padding:20px;">
+        <div id=head style="font-family: Verdana, Geneva, Tahoma, sans-serif;"><h2 style="margin-left: 35%;">Personal Details</h2></div>
+   <table style="width:80%;padding:20px;margin-left: 10%;">
      <tr>
-       <td>Username:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+       <td>Username  </td>
        <td>{{user.username}}</td>
      </tr>
      <tr>
-      <td>Name: </td>
+      <td>Name </td>
       <td>{{user.name}}</td>
     </tr>
     <tr>
-      <td>Email id: </td>
+      <td>Email id </td>
       <td>{{user.email}}</td>
     </tr>
     <tr>
-      <td>Mobile no: </td>
+      <td>Mobile no </td>
       <td>{{user.mobile}}</td>
     </tr>
     <tr>
-      <td>DOB: </td>
+      <td>DOB </td>
       <td>{{user.dob}}</td>
     </tr>
     <tr>
-      <td>PAN No: </td>
+      <td>PAN No </td>
       <td>{{user.pan_no}}</td>
     </tr>
     <tr>
-      <td>Aadhar No: </td>
+      <td>Aadhar No </td>
       <td>{{user.aadhar_no}}</td>
     </tr>
    </table>
