@@ -145,11 +145,11 @@
               <th>
                 {% if shrs["Close"][port.company_id][-1]|float < port.bid_price|float %}
                 <div id="current_investment" style="color:red">
-                  ₹{{'%0.2f'%((shrs["Close"][port.company_id][-1]|float) * port.quantity)|float}}
+                  ₹{{'%0.2f'%((shrs["Close"][port.company_id][shrs["Close"][port.company_id].last_valid_index()]|float) * port.quantity)|float}}
                 </div>
                 {% else %}
                 <div id="current_investment" style="color:green">
-                  ₹{{'%0.2f'%((shrs["Close"][port.company_id][-1]|float) * port.quantity)|float}}
+                  ₹{{'%0.2f'%((shrs["Close"][port.company_id][shrs["Close"][port.company_id].last_valid_index()]|float) * port.quantity)|float}}
                 
                 {% endif %}
               </th>
@@ -158,7 +158,7 @@
             <tr>
               <td>
                 <div id="current_price">
-                    Current Price : ₹{{'%0.2f'%(shrs["Close"][port.company_id][-1])|float}}
+                    Current Price : ₹{{'%0.2f'%(shrs["Close"][port.company_id][shrs["Close"][port.company_id].last_valid_index()])|float}}
                 </div>
               </td>
               <td>
@@ -187,11 +187,11 @@
                 <!-- ( buy_price < current_price ? Profit : Loss ) -->
                {% if port.bid_price|float < shrs["Close"][port.company_id][-1]|float %}
                <div id="profit_loss" style="color:green">
-                Profit:₹{{'%0.2f'%((shrs["Close"][port.company_id][-1] * port.quantity)|float - (port.bid_price * port.quantity)|float)|abs}}
+                Profit:₹{{'%0.2f'%((shrs["Close"][port.company_id][shrs["Close"][port.company_id].last_valid_index()] * port.quantity)|float - (port.bid_price * port.quantity)|float)|abs}}
                </div>
                 {% else %}
                 <div id="profit_loss" style="color:red">
-                Loss:₹{{'%0.2f'%((shrs["Close"][port.company_id][-1] * port.quantity)|float - (port.bid_price * port.quantity)|float)|abs}}
+                Loss:₹{{'%0.2f'%((shrs["Close"][port.company_id][shrs["Close"][port.company_id].last_valid_index()] * port.quantity)|float - (port.bid_price * port.quantity)|float)|abs}}
                </div>
                 {% endif %}
                 
