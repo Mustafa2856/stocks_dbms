@@ -97,13 +97,13 @@ DECLARE
 	usr "User"%rowtype;
 BEGIN
 	SELECT * INTO usr FROM "User";
-	if new.username NOT LIKE '.....%' then
+	if new.username NOT LIKE '_____%' then
 		RAISE EXCEPTION 'INVALID USERNAME';
 	end if;
 	if new.name NOT LIKE '% %' then
 		RAISE EXCEPTION 'Enter Full name';
 	end if;
-
+	return new;
 END;
 $$ LANGUAGE PLPGSQL;
 

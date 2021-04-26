@@ -269,9 +269,9 @@ def transaction():
          print("PostgreSQL connection is closed")  """
    if request.method == 'GET':
       if request.args.get('sb') == '1':
-         transaction = transactions.query.filter_by(buy=True).order_by(transactions.timestamp.desc()).all()
+         transaction = transactions.query.filter_by(demat_ac=dmt.account_no,buy=True).order_by(transactions.timestamp.desc()).all()
       elif request.args.get('sb') == '2':
-         transaction = transactions.query.filter_by(buy=False).order_by(transactions.timestamp.desc()).all()
+         transaction = transactions.query.filter_by(demat_ac=dmt.account_no,buy=False).order_by(transactions.timestamp.desc()).all()
       else:
          transaction = transactions.get_trs(dmt.account_no)
    return render_template('/Pending.html',user=user,dmt=dmt,trans=trans,transaction=transaction,cmp=cmp)
