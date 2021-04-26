@@ -6,6 +6,7 @@
    body{
       align-items: center;
       margin:0;
+      font-family: 'Open Sans',sans-serif;
      
     }
     
@@ -127,7 +128,7 @@
     <hr>
 
     <table>
-        {% for port in pft %}
+      {% for port in pft %}
         
         <tr>
             <th> 
@@ -202,14 +203,12 @@
           </td>
           </tr>
           <script>
-            gain+=parseInt("{{'%0.2f'%((shrs['Close'][port.company_id][-1] * port.quantity)|float - (port.bid_price * port.quantity)|float)}}");
-            invest+=parseInt("{{'%0.2f'%((shrs['Close'][port.company_id][-1]|float) * port.quantity|float)}}");
+            gain+=parseInt("{{'%0.2f'%((shrs['Close'][port.company_id][shrs['Close'][port.company_id].last_valid_index()] * port.quantity)|float - (port.bid_price * port.quantity)|float)}}");
+            invest+=parseInt("{{'%0.2f'%((shrs['Close'][port.company_id][shrs['Close'][port.company_id].last_valid_index()]|float) * port.quantity|float)}}");
           </script>
         {% endfor %}
       </table>
       <script>
-      console.log(gain)
-      console.log(invest)
       document.getElementById("total_gain").innerHTML=gain;
       document.getElementById("total_investment").innerHTML=invest;
       if(gain<0){
@@ -220,6 +219,11 @@
         document.getElementById("total_gain").style.color="green";
       document.getElementById("total_investment").style.color="green";
       }
+
+      function autoRefresh() {
+        window.location = window.location.href;
+    }
+    //setInterval('autoRefresh()', 60000);
       </script>
       </header>
 </body>
