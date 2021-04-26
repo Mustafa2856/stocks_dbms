@@ -127,7 +127,7 @@
     <hr>
 
     <table>
-        {% for port in pft %}
+        
         
         <tr>
             <th> 
@@ -145,7 +145,7 @@
               <th>
                 {% if shrs["Close"][port.company_id][-1]|float < port.bid_price|float %}
                 <div id="current_investment" style="color:red">
-                  ₹{{'%0.2f'%((shrs["Close"][port.company_id][-1]|float) * port.quantity)|float}}
+                  ₹{{('%0.2f'%(shrs['Close'][port.company_id][i]|float) * port.quantity)|float}}
                 </div>
                 {% else %}
                 <div id="current_investment" style="color:green">
@@ -208,8 +208,6 @@
         {% endfor %}
       </table>
       <script>
-      console.log(gain)
-      console.log(invest)
       document.getElementById("total_gain").innerHTML=gain;
       document.getElementById("total_investment").innerHTML=invest;
       if(gain<0){
@@ -220,6 +218,11 @@
         document.getElementById("total_gain").style.color="green";
       document.getElementById("total_investment").style.color="green";
       }
+
+      function autoRefresh() {
+        window.location = window.location.href;
+    }
+    //setInterval('autoRefresh()', 60000);
       </script>
       </header>
 </body>
