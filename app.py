@@ -182,6 +182,9 @@ def porfolio():
    pft = portfolio.get_shares(dmt.account_no)
    port_shrs_yf(list(cmp.keys()))
    #print(shrs_data)
+   if request.method == 'GET':
+      if request.args.get('cmp'):
+         pft = db.session.execute('SELECT * FROM PORTFOLIO_FILTER('.__add__(str(dmt.account_no).__add__(',\'').__add__(str(request.args.get('cmp')).__add__('\')'))))
    return render_template('/portfolio.html',user=user,dmt=dmt,trans=trans,pft=pft,cmp=cmp,shrs=shrs_data)
 
 @app.route('/trade',methods=['POST','GET'])
@@ -242,36 +245,13 @@ def transaction():
       return redirect('/login')
    if trans==None:
       trans=[]
-   """ engine = create_engine('postgresql://postgres:neel@localhost:5432/stocks_dbms')
-   with engine.connect() as con:
-      rs = con.execute('SELECT * FROM transactions where demat_ac='+str(dmt.account_no))
-      for row in rs:
-         print(row) """
-   """ try:
-       cursor = db.cursor()
-
-      # call stored procedure
-      cursor.callproc('TRANSACTION_FILTER', [1,str(dmt.account_no),'' ])
-      result = cursor.fetchall()
-      print(result)
-      print("neel")
-      for row in result:
-         print("Id = ", row[0], )
-         print("Name = ", row[1])
-         print("Designation  = ", row[2])
-   except (Exception, psycopg2.DatabaseError) as error:
-      print("Error while connecting to PostgreSQL", error)
-   finally:
-      # closing database connection.
-      if ps_connection:
-         cursor.close()
-         ps_connection.close()
-         print("PostgreSQL connection is closed")  """
    if request.method == 'GET':
-      if request.args.get('sb') == '1':
-         transaction = transactions.query.filter_by(demat_ac=dmt.account_no,buy=True).order_by(transactions.timestamp.desc()).all()
+      if request.args.get('sb') == '3' and request.args.get('cmp'):
+         transaction = db.session.execute('SELECT * FROM TRANSACTION_FILTER(3,'.__add__(str(dmt.account_no).__add__(',\'').__add__(str(request.args.get('cmp')).__add__('\')'))))
       elif request.args.get('sb') == '2':
-         transaction = transactions.query.filter_by(demat_ac=dmt.account_no,buy=False).order_by(transactions.timestamp.desc()).all()
+         transaction = db.session.execute('SELECT * FROM TRANSACTION_FILTER(2,'.__add__(str(dmt.account_no).__add__(',\'_\')')))
+      elif request.args.get('sb') == '1':
+         transaction = db.session.execute('SELECT * FROM TRANSACTION_FILTER(1,'.__add__(str(dmt.account_no).__add__(',\'_\')')))
       else:
          transaction = transactions.get_trs(dmt.account_no)
    return render_template('/Pending.html',user=user,dmt=dmt,trans=trans,transaction=transaction,cmp=cmp)

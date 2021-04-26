@@ -117,12 +117,12 @@
     <div>
         DEMAT A/C No: {{dmt.account_no}}<br>
         Total Investment: {{dmt.Funds_Invested}}<br>
-        Current Investment:<div id="total_investment" style="display:inline"></div><br>
-        Overall Gain/Loss: <div id="total_gain" style="display:inline"></div><br>
+        <!--Current Investment:<div id="total_investment" style="display:inline"></div><br>
+        Overall Gain/Loss: <div id="total_gain" style="display:inline"></div><br>-->
     </div>
     <div>
       Apply Filter: 
-      <input type="text" value=><button>Company Search</button>
+      <input id='cmpin' type="text"><button onClick="window.location = '/portfolio?cmp=' + document.getElementById('cmpin').value">Company Search</button>
     </div>
     <hr>
 
