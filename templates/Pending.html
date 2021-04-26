@@ -76,7 +76,7 @@
     }
     
     button {
-      background-color: #0b2cec;
+      background-color: grey;
       color: rgb(255, 255, 255);
       margin-left:5px;
       border-radius: 5px;
@@ -132,10 +132,10 @@
       }
     }
     </script>
-    <div>
+    <div style="margin-left:30%; margin-top: 2%;">
       Apply Filter: <input type="radio" name="filter" onClick="window.location='/transactions?sb=1'"> Buyings
       <input type="radio" name="filter" onClick="window.location='/transactions?sb=2'"> Sellings
-      <input type="radio" name="filter" onClick="window.location='/transactions'"> All
+      <input type="radio" name="filter" onClick="window.location='/transactions'"> All&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <input id='cmpin' type="text"><button onClick="window.location = '/transactions?sb=3&cmp=' + document.getElementById('cmpin').value">Company Search</button>
     </div>
     {% for tr in transaction %}
