@@ -184,12 +184,7 @@ def porfolio():
       flash('Login to Accesss Potfolio')
       return redirect('/login')
    pft = portfolio.get_shares(dmt.account_no)
-   print(pft)
-   new_cmp=[]
-   for i in pft:
-      new_cmp.append(i.company_id)
-   port_shrs_yf(new_cmp)
-   #port_shrs_yf(list(cmp.keys()))
+   port_shrs_yf(list(cmp.keys()))
    #print(shrs_data)
    if request.method == 'GET':
       if request.args.get('cmp'):
