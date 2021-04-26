@@ -62,6 +62,11 @@ class Bank_Details(db.Model):
     def __repr__(self):
         return '<Bank_ac %r>' % self.account_no
 
+    @classmethod
+    def get_bank(cls,User_id):
+        bank = cls.query.filter_by(user=User_id).first()
+        return bank
+
 
 class demat(db.Model):
     __tablename__ = 'demat'

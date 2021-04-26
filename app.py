@@ -149,10 +149,14 @@ def user_home():
 @app.route('/personal_details',methods=['POST','GET'])
 def personal_details():
    user = session.get('current_user',None)
+   bank= Bank_Details.get_bank(user)
+   print(bank)
+   print(bank.account_no)
+   print(bank.bank_IFSC)
    if user == None:
       flash('Login to Access Personal Details Page')
       return redirect('/login')
-   return render_template('/personal_details.html',user=user)
+   return render_template('/personal_details.html',user=user,bank=bank)
 
 @app.route('/company_details',methods=['POST','GET'])
 def company_details():
@@ -184,9 +188,7 @@ def porfolio():
    new_cmp=[]
    for i in pft:
       new_cmp.append(i.company_id)
-   print(new_cmp)
    port_shrs_yf(new_cmp)
-   print(shrs_data)
    #port_shrs_yf(list(cmp.keys()))
    #print(shrs_data)
    return render_template('/portfolio.html',user=user,dmt=dmt,trans=trans,pft=pft,cmp=cmp,shrs=shrs_data)
