@@ -35,9 +35,7 @@ def get_shrs_yf(cmp,period='1d',interval='1m'):
    global shrs_data ,share_info,year_shr_data
    global s_time
    shrs_data = yf.download(tickers=cmp,period='1d',interval='1m')
-   print(shrs_data)
    share_info=yf.Ticker(cmp).info
-   print(shrs_data)
    s_time = time.time()
 
 def port_shrs_yf(cmp,period='1d',interval='1m',change_gl=True):
