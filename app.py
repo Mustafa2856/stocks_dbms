@@ -35,7 +35,9 @@ def get_shrs_yf(cmp,period='1d',interval='1m'):
    global shrs_data ,share_info,year_shr_data
    global s_time
    shrs_data = yf.download(tickers=cmp,period='1d',interval='1m')
+   print(shrs_data)
    share_info=yf.Ticker(cmp).info
+   print(shrs_data)
    s_time = time.time()
 
 def port_shrs_yf(cmp,period='1d',interval='1m',change_gl=True):
@@ -194,11 +196,11 @@ def porfolio():
 @app.route('/trade',methods=['POST','GET'])
 def trade():
    user = session.get('current_user',None)
-   dmt = demat.get_ac(session['current_user'].username)
-   pft = portfolio.get_shares(dmt.account_no)
    if user == None:
       flash('Login to Access Trade Page')
       return redirect('/login')
+   dmt = demat.get_ac(session['current_user'].username)
+   pft = portfolio.get_shares(dmt.account_no)
    if request.method == 'GET' :
       # tp -> 0 -> sell , tp -> 1 -> buy
       company_to_trade = request.args.get('cmp')
@@ -259,3 +261,8 @@ def transaction():
       else:
          transaction = transactions.get_trs(dmt.account_no)
    return render_template('/Pending.html',user=user,dmt=dmt,trans=trans,transaction=transaction,cmp=cmp)
+
+
+@app.errorhandler(404)
+def error404(e):
+   return render_template('/error404.html')
