@@ -2,16 +2,8 @@ import os
 from flask import Flask, render_template, request, session , redirect, flash
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from werkzeug.security import generate_password_hash, check_password_hash
-import numpy as np
-import pandas as pd
 import yfinance as yf
 import time
-import plotly.graph_objs as go
-import datetime
-from sqlalchemy import create_engine
-import psycopg2
 app = Flask(__name__,static_folder="",static_url_path="/"+os.getcwd())
 
 s = os.environ.get("DATABASE_URL")
@@ -27,37 +19,42 @@ db.session.rollback()
 s_time = time.time()-60
 shrs_data = None
 year_shr_data = None
-share_info = {'previousClose': 0, 'regularMarketOpen': 0, 'regularMarketDayHigh': 0,'regularMarketPreviousClose': 253.20,'regularMarketDayLow': 0,'marketCap': 0,'dayLow': 0,'volume': 0,'fiftyTwoWeekHigh': 0,
-'fiftyTwoWeekLow': 0,'shortName': '','regularMarketPrice': 0
+share_info = {
+   'previousClose': 0,
+   'regularMarketOpen': 0, 
+   'regularMarketDayHigh': 0,
+   'regularMarketPreviousClose': 0,
+   'regularMarketDayLow': 0,
+   'marketCap': 0,
+   'dayLow': 0,
+   'volume': 0,
+   'fiftyTwoWeekHigh': 0,
+   'fiftyTwoWeekLow': 0,
+   'shortName': '',
+   'regularMarketPrice': 0
 }
 def get_shrs_yf(cmp,period='1d',interval='1m'):
-   #comp = str(cmp).translate([None,'[],\''])
    global shrs_data ,share_info,year_shr_data
    global s_time
-   shrs_data = yf.download(tickers=cmp,period='1d',interval='1m')
+   shrs_data = yf.download(tickers=cmp,period=period,interval=interval)
    share_info=yf.Ticker(cmp).info
    s_time = time.time()
 
-def port_shrs_yf(cmp,period='1d',interval='1m',change_gl=True):
-   comp = str(cmp).translate([None,'[],\''])
+def port_shrs_yf(cmp,period='1d',interval='1m'):
    global shrs_data ,share_info,year_shr_data
    global s_time
-   #if s_time==None or time.time() - s_time > 60:
-   shar_data = yf.download(tickers=cmp,period='1d',interval='1m')
+   shar_data = yf.download(tickers=cmp,period=period,interval=interval)
    s_time = time.time()
    shrs_data = shar_data
-   """else:
-      shar_data = shrs_data 
-   """
    return shar_data
 
-def get_company_info(cmp,change_gl=False):
+def get_company_info(cmp):
    global share_info
    for c in cmp:
       share_info[c] = yf.Ticker(c).info
    return share_info
 
-from models import User, Bank_Details, demat, company, shares, portfolio, transactions
+from models import User, Bank_Details, demat, company, portfolio, transactions
 
 comp = None
 cmp=None
@@ -126,17 +123,10 @@ def user_home():
    if trans==None:
       trans=[]
    if request.args.get('trade')=='1':
-      #location.href="/user_home?trade=1&company_id"+"{{share_info['symbol']}}"+
-      #      "&company="+"{{share_info['shortName']}}"+
-      #      "&buy=1"+
-      #      "&price="+"{{share_info['regularMarketPrice']}}"+
-      #      "&quantity="+document.getElementById("quantity").value;+
-      #      "&status=1"
       form=request.args
       print(form)
       try:
          db.session.add(transactions(form.get('company_id'),form.get('company'), dmt.account_no,bool(form.get('buy')),float(form.get('price')),int(form.get('quantity')),form.get('status')))
-         #db.session.add(portfolio(form.get('company_id'),int(form.get('quantity')),float(form.get('price')),dmt.account_no))
          db.session.commit()
       except Exception as exp:
          print(exp)
@@ -185,7 +175,6 @@ def porfolio():
       return redirect('/login')
    pft = portfolio.get_shares(dmt.account_no)
    port_shrs_yf(list(cmp.keys()))
-   #print(shrs_data)
    if request.method == 'GET':
       if request.args.get('cmp'):
          pft = db.session.execute('SELECT * FROM PORTFOLIO_FILTER('.__add__(str(dmt.account_no).__add__(',\'').__add__(str(request.args.get('cmp')).__add__('\')'))))
@@ -224,15 +213,12 @@ def trade():
                if dat.empty:
                   print('Company not Found')
                else:
-                  #shr_info = get_company_info([company_to_trade,])
-                  #print("check2"+shr_info)
                   get_shrs_yf(company_to_trade)
                   db.session.add(company(company_to_trade,company_to_trade,'-',dat['High'].max(skipna=True),dat['Low'].min(skipna=True)))
                   db.session.commit()
                   updt_cmp()
                   return render_template('/trade_page.html',user=user,dmt=dmt,shrs=shrs_data,share_info=share_info)
             except Exception as exp:
-               #get_shrs_yf(list(cmp.keys()))
                print(exp)
    if share_info == None:
       port_shrs_yf(list(cmp.keys()))
