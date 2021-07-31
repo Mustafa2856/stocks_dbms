@@ -33,11 +33,14 @@ share_info = {
    'shortName': '',
    'regularMarketPrice': 0
 }
+dup_share_info = share_info
 def get_shrs_yf(cmp,period='1d',interval='1m'):
-   global shrs_data ,share_info,year_shr_data
+   global shrs_data ,share_info,year_shr_data,dup_share_info
    global s_time
    shrs_data = yf.download(tickers=cmp,period=period,interval=interval)
    share_info=yf.Ticker(cmp).info
+   if share_info == {'regularMarketPrice': None, 'logo_url': ''}:
+      share_info = dup_share_info
    s_time = time.time()
 
 def port_shrs_yf(cmp,period='1d',interval='1m'):
@@ -153,10 +156,13 @@ def company_details():
    user = session.get('current_user',None)
    comp=request.args.get('comp')
    if comp== None :
-      return render_template('/company_details.html',user=user,cmp_list=list(cmp.keys()),shrs=share_info,shrs_curr=shrs_data,flag=0)
+      return render_template('/company_details.html',user=user,cmp_list=list(cmp.keys()),shrs=share_info,shrs_curr=shrs_data,flag=0,error=0)
    else:
       get_shrs_yf(comp)
-      return render_template('/company_details.html',user=user,cmp_list=list(cmp.keys()),shrs=share_info,shrs_curr=shrs_data,flag=1)
+      if share_info != dup_share_info :
+         return render_template('/company_details.html',user=user,cmp_list=list(cmp.keys()),shrs=share_info,shrs_curr=shrs_data,flag=1)
+      else:
+         return render_template('/company_details.html',user=user,cmp_list=list(cmp.keys()),shrs=share_info,shrs_curr=shrs_data,flag=0,error=1)
 
 @app.route('/logout',methods=['POST','GET'])
 def logout():

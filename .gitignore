@@ -6,6 +6,7 @@ __pycache__/
 # C extensions
 *.so
 .vscode/*
+.vscode/launch.json
 # Distribution / packaging
 .Python
 flask_session/

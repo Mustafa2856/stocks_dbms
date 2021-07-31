@@ -271,6 +271,11 @@
 </center>
     
     {% if flag == 0 %}
+      {% if error == 1 %}
+        <script>
+          alert("Company Doesn't Exist")
+        </script>
+      {% endif %}
     {% else %}
     <section id="Rel" class="Company_Details">
        <center>
