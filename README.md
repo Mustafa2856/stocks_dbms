@@ -10,3 +10,7 @@ export FLASK_ENV=development
 export DATABASE_URL=postgresql:///stocks_dbms
 flask run
 ```
+
+Live Demo
+<br />
+https://stocks-dbms.herokuapp.com/
